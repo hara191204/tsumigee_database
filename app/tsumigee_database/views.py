@@ -18,7 +18,7 @@ _VALID_SORT_FIELDS = {
     "clear_status",
     "grade",
     "is_package",
-    "is_bishoujo",
+    "is_bishojo",
     "created_at",
     "cleared_at",
     "note",
@@ -43,7 +43,7 @@ class GameListView(ListView):
         clear_statuses = self.request.GET.getlist("clear_status")
         grades = self.request.GET.getlist("grade")
         is_package = self.request.GET.get("is_package", "")
-        is_bishoujo = self.request.GET.get("is_bishoujo", "")
+        is_bishojo = self.request.GET.get("is_bishojo", "")
         if maker:
             qs = qs.filter(maker_id=maker)
         if hard:
@@ -54,8 +54,8 @@ class GameListView(ListView):
             qs = qs.filter(grade__in=grades)
         if is_package != "":
             qs = qs.filter(is_package=is_package == "true")
-        if is_bishoujo != "":
-            qs = qs.filter(is_bishoujo=is_bishoujo == "true")
+        if is_bishojo != "":
+            qs = qs.filter(is_bishojo=is_bishojo == "true")
         return qs
 
     def get_queryset(self):
@@ -72,7 +72,7 @@ class GameListView(ListView):
         ctx["selected_clear_statuses"] = self.request.GET.getlist("clear_status")
         ctx["selected_grades"] = self.request.GET.getlist("grade")
         ctx["selected_is_package"] = self.request.GET.get("is_package", "")
-        ctx["selected_is_bishoujo"] = self.request.GET.get("is_bishoujo", "")
+        ctx["selected_is_bishojo"] = self.request.GET.get("is_bishojo", "")
         sort = self._get_sort()
         ctx["sort_field"] = sort.lstrip("-")
         ctx["sort_order"] = "desc" if sort.startswith("-") else "asc"
@@ -87,7 +87,9 @@ class GameListView(ListView):
             total=Count("id"),
             clear=Count("id", filter=Q(clear_status=Game.ClearStatusChoices.CLEAR)),
             tsumi=Count("id", filter=Q(clear_status=Game.ClearStatusChoices.TSUMI)),
-            na=Count("id", filter=Q(clear_status=Game.ClearStatusChoices.NA)),
+            collection_only=Count(
+                "id", filter=Q(clear_status=Game.ClearStatusChoices.COLLECTION_ONLY)
+            ),
         )
         total = agg["total"]
         ctx["stats"] = {

@@ -15,7 +15,7 @@
                   height="120"
                   data-clear="{{ stats.clear }}"
                   data-tsumi="{{ stats.tsumi }}"
-                  data-na="{{ stats.na }}"></canvas>
+                  data-collection-only="{{ stats.collection_only }}"></canvas>
         </div>
         <div class="col">
           <div class="fs-4 fw-bold mb-1">積み率：{{ stats.tsumi_ratio }}%</div>
@@ -23,13 +23,13 @@
             総数：{{ stats.total }} ／
             <span class="text-success fw-semibold">クリア：{{ stats.clear }}</span> ／
             <span class="text-danger fw-semibold">積み：{{ stats.tsumi }}</span> ／
-            N/A：{{ stats.na }}
+            コレクションのみ：{{ stats.collection_only }}
           </div>
         </div>
       </div>
     </div>
   </div>
-  {% with is_filtered=selected_maker|default:selected_hard|default:selected_clear_statuses|default:selected_grades|default:selected_is_package|default:selected_is_bishoujo %}
+  {% with is_filtered=selected_maker|default:selected_hard|default:selected_clear_statuses|default:selected_grades|default:selected_is_package|default:selected_is_bishojo %}
     <div class="accordion mb-4" id="filterAccordion">
       <div class="accordion-item">
         <h2 class="accordion-header">
@@ -110,12 +110,12 @@
                 </div>
                 <div class="col-auto">
                   <label class="form-label small fw-semibold mb-1">美少女ゲーム</label>
-                  <select name="is_bishoujo" class="form-select form-select-sm">
-                    <option value="" {% if selected_is_bishoujo == "" %}selected{% endif %}>すべて</option>
+                  <select name="is_bishojo" class="form-select form-select-sm">
+                    <option value="" {% if selected_is_bishojo == "" %}selected{% endif %}>すべて</option>
                     <option value="true"
-                            {% if selected_is_bishoujo == "true" %}selected{% endif %}>✓ あり</option>
+                            {% if selected_is_bishojo == "true" %}selected{% endif %}>✓ あり</option>
                     <option value="false"
-                            {% if selected_is_bishoujo == "false" %}selected{% endif %}>- なし</option>
+                            {% if selected_is_bishojo == "false" %}selected{% endif %}>- なし</option>
                   </select>
                 </div>
                 <div class="col-auto d-flex gap-1">
@@ -205,10 +205,10 @@
             </a>
           </th>
           <th class="text-center">
-            <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'is_bishoujo' and sort_order == 'asc' %}-{% endif %}is_bishoujo"
+            <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'is_bishojo' and sort_order == 'asc' %}-{% endif %}is_bishojo"
                class="text-white text-decoration-none">
               美少女
-              {% if sort_field == 'is_bishoujo' %}
+              {% if sort_field == 'is_bishojo' %}
                 <i class="fa-solid fa-sort-{{ sort_order }} ms-1"></i>
               {% else %}
                 <i class="fa-solid fa-sort ms-1 opacity-25"></i>
@@ -273,7 +273,7 @@
             {% endif %}
           </td>
           <td class="text-center">
-            {% if game.is_bishoujo %}
+            {% if game.is_bishojo %}
               <i class="fa-solid fa-check"></i>
             {% else %}
               -
@@ -330,12 +330,12 @@
     new Chart(canvas, {
       type: 'doughnut',
       data: {
-        labels: ['クリア', '積み', 'N/A'],
+        labels: ['クリア', '積み', 'コレクションのみ'],
         datasets: [{
           data: [
             parseInt(canvas.dataset.clear),
             parseInt(canvas.dataset.tsumi),
-            parseInt(canvas.dataset.na),
+            parseInt(canvas.dataset.collectionOnly),
           ],
           backgroundColor: ['#198754', '#dc3545', '#6c757d'],
           borderWidth: 0,

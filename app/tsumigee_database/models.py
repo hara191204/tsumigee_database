@@ -24,7 +24,7 @@ class Maker(models.Model):
         validators=[FURIGANA_VALIDATOR],
     )
 
-    is_bishoujo_brand = models.BooleanField(
+    is_bishojo_brand = models.BooleanField(
         verbose_name="美少女ゲームブランド",
         default=False,
     )
@@ -85,7 +85,7 @@ class Game(models.Model):
     class ClearStatusChoices(models.TextChoices):
         CLEAR = "clear", "クリア"
         TSUMI = "tsumi", "積み"
-        NA = "-", "-"
+        COLLECTION_ONLY = "collection_only", "コレクションのみ"
 
     class GradeChoices(models.TextChoices):
         SPLUS = "S+", "S+"
@@ -120,12 +120,12 @@ class Game(models.Model):
         related_name="original_games",
     )
 
-    # 実際にプレイ可能な機種（任意項目）
+    # 実際にプレイ可能なハード（任意項目）
     # 例: アイスクライマーをWiiのバーチャルコンソールで所持している場合
-    #     hard = FC, play_hard = Wii となる
+    #     hard = FC, playable_games = Wii となる
     play_hard = models.ForeignKey(
         Hard,
-        verbose_name="プレイ機種",
+        verbose_name="プレイ可能ハード",
         on_delete=models.SET_NULL,
         related_name="playable_games",
         null=True,
@@ -134,7 +134,7 @@ class Game(models.Model):
 
     clear_status = models.CharField(
         verbose_name="クリア状況",
-        max_length=8,
+        max_length=15,
         choices=ClearStatusChoices.choices,
         default=ClearStatusChoices.TSUMI,
     )
@@ -151,7 +151,7 @@ class Game(models.Model):
         default=False,
     )
 
-    is_bishoujo = models.BooleanField(
+    is_bishojo = models.BooleanField(
         verbose_name="美少女ゲーム",
         default=False,
     )

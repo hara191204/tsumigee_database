@@ -23,7 +23,7 @@
           <td><a href="{% url 'tsumigee_database:maker_detail' maker.pk %}">{{ maker.name }}</a></td>
           <td>{{ maker.furigana }}</td>
           <td class="text-center">
-            {% if maker.is_bishoujo_brand %}
+            {% if maker.is_bishojo_brand %}
               <i class="fa-solid fa-check"></i>
             {% else %}
               -
