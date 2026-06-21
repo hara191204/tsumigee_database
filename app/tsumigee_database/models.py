@@ -1,6 +1,7 @@
 from django.core.validators import RegexValidator
 from django.db import models
 from django.urls import reverse
+from simple_history.models import HistoricalRecords
 
 # フリガナ用バリデータ：全角カタカナ・長音符・半角数字のみ許可
 FURIGANA_VALIDATOR = RegexValidator(
@@ -33,6 +34,8 @@ class Maker(models.Model):
         auto_now=True,
     )
 
+    history = HistoricalRecords()
+
     class Meta:
         verbose_name = "メーカー"
         verbose_name_plural = "メーカー"
@@ -59,6 +62,8 @@ class Hard(models.Model):
         verbose_name="更新日時",
         auto_now=True,
     )
+
+    history = HistoricalRecords()
 
     class Meta:
         verbose_name = "ハード"
@@ -164,6 +169,8 @@ class Game(models.Model):
         verbose_name="備考",
         blank=True,
     )
+
+    history = HistoricalRecords()
 
     class Meta:
         verbose_name = "ゲーム"
