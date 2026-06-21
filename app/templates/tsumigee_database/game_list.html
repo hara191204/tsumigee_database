@@ -76,6 +76,10 @@
         <th>ハード</th>
         <th>クリア状況</th>
         <th>評価</th>
+        <th class="text-center">パッケージ所有</th>
+        <th>作成日</th>
+        <th>クリア日</th>
+        <th>備考</th>
       </tr>
     </thead>
     <tbody>
@@ -89,10 +93,14 @@
           <td>{{ game.hard }}</td>
           <td>{{ game.get_clear_status_display }}</td>
           <td>{{ game.grade }}</td>
+          <td class="text-center">{{ game.is_package|yesno:"✓,-" }}</td>
+          <td class="text-nowrap">{{ game.created_at|date:"Y/m/d" }}</td>
+          <td class="text-nowrap">{{ game.cleared_at|date:"Y/m/d"|default:"-" }}</td>
+          <td>{{ game.note }}</td>
         </tr>
       {% empty %}
         <tr>
-          <td colspan="6" class="text-center text-muted">ゲームが登録されていません</td>
+          <td colspan="10" class="text-center text-muted">ゲームが登録されていません</td>
         </tr>
       {% endfor %}
     </tbody>
