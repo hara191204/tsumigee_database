@@ -24,6 +24,11 @@ class Maker(models.Model):
         validators=[FURIGANA_VALIDATOR],
     )
 
+    is_bishoujo_brand = models.BooleanField(
+        verbose_name="美少女ゲームブランド",
+        default=False,
+    )
+
     created_at = models.DateTimeField(
         verbose_name="登録日時",
         auto_now_add=True,
@@ -143,6 +148,11 @@ class Game(models.Model):
 
     is_package = models.BooleanField(
         verbose_name="パッケージ所有",
+        default=False,
+    )
+
+    is_bishoujo = models.BooleanField(
+        verbose_name="美少女ゲーム",
         default=False,
     )
 

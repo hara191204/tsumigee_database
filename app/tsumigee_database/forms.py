@@ -15,6 +15,7 @@ class GameForm(forms.ModelForm):
             "clear_status",
             "grade",
             "is_package",
+            "is_bishoujo",
             "cleared_at",
             "note",
         ]
@@ -49,7 +50,7 @@ class BootstrapFormMixin:
 class MakerForm(BootstrapFormMixin, forms.ModelForm):
     class Meta:
         model = Maker
-        fields = ["name", "furigana"]
+        fields = ["name", "furigana", "is_bishoujo_brand"]
 
 
 class HardForm(BootstrapFormMixin, forms.ModelForm):

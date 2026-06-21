@@ -21,6 +21,10 @@
         <td>{{ object.furigana }}</td>
       </tr>
       <tr>
+        <th class="table-secondary">美少女ゲームブランド</th>
+        <td>{{ object.is_bishoujo_brand|yesno:"あり,なし" }}</td>
+      </tr>
+      <tr>
         <th class="table-secondary">登録日時</th>
         <td>{{ object.created_at }}</td>
       </tr>

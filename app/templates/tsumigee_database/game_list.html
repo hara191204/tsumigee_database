@@ -29,7 +29,7 @@
       </div>
     </div>
   </div>
-  {% with is_filtered=selected_maker|default:selected_hard|default:selected_clear_statuses|default:selected_grades|default:selected_is_package %}
+  {% with is_filtered=selected_maker|default:selected_hard|default:selected_clear_statuses|default:selected_grades|default:selected_is_package|default:selected_is_bishoujo %}
     <div class="accordion mb-4" id="filterAccordion">
       <div class="accordion-item">
         <h2 class="accordion-header">
@@ -106,6 +106,16 @@
                             {% if selected_is_package == "true" %}selected{% endif %}>✓ あり</option>
                     <option value="false"
                             {% if selected_is_package == "false" %}selected{% endif %}>- なし</option>
+                  </select>
+                </div>
+                <div class="col-auto">
+                  <label class="form-label small fw-semibold mb-1">美少女ゲーム</label>
+                  <select name="is_bishoujo" class="form-select form-select-sm">
+                    <option value="" {% if selected_is_bishoujo == "" %}selected{% endif %}>すべて</option>
+                    <option value="true"
+                            {% if selected_is_bishoujo == "true" %}selected{% endif %}>✓ あり</option>
+                    <option value="false"
+                            {% if selected_is_bishoujo == "false" %}selected{% endif %}>- なし</option>
                   </select>
                 </div>
                 <div class="col-auto d-flex gap-1">
@@ -195,6 +205,17 @@
             </a>
           </th>
           <th class="text-center">
+            <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'is_bishoujo' and sort_order == 'asc' %}-{% endif %}is_bishoujo"
+               class="text-white text-decoration-none">
+              美少女
+              {% if sort_field == 'is_bishoujo' %}
+                <i class="fa-solid fa-sort-{{ sort_order }} ms-1"></i>
+              {% else %}
+                <i class="fa-solid fa-sort ms-1 opacity-25"></i>
+              {% endif %}
+            </a>
+          </th>
+          <th class="text-center">
             <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'created_at' and sort_order == 'asc' %}-{% endif %}created_at"
                class="text-white text-decoration-none">
               作成日
@@ -251,13 +272,20 @@
               -
             {% endif %}
           </td>
+          <td class="text-center">
+            {% if game.is_bishoujo %}
+              <i class="fa-solid fa-check"></i>
+            {% else %}
+              -
+            {% endif %}
+          </td>
           <td class="text-center text-nowrap">{{ game.created_at|date:"Y/m/d" }}</td>
           <td class="text-center text-nowrap">{{ game.cleared_at|date:"Y/m/d"|default:"-" }}</td>
           <td class="text-center">{{ game.note }}</td>
         </tr>
       {% empty %}
         <tr>
-          <td colspan="10" class="text-center text-muted">ゲームが登録されていません</td>
+          <td colspan="11" class="text-center text-muted">ゲームが登録されていません</td>
         </tr>
       {% endfor %}
     </tbody>

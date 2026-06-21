@@ -18,6 +18,7 @@ _VALID_SORT_FIELDS = {
     "clear_status",
     "grade",
     "is_package",
+    "is_bishoujo",
     "created_at",
     "cleared_at",
     "note",
@@ -42,6 +43,7 @@ class GameListView(ListView):
         clear_statuses = self.request.GET.getlist("clear_status")
         grades = self.request.GET.getlist("grade")
         is_package = self.request.GET.get("is_package", "")
+        is_bishoujo = self.request.GET.get("is_bishoujo", "")
         if maker:
             qs = qs.filter(maker_id=maker)
         if hard:
@@ -52,6 +54,8 @@ class GameListView(ListView):
             qs = qs.filter(grade__in=grades)
         if is_package != "":
             qs = qs.filter(is_package=is_package == "true")
+        if is_bishoujo != "":
+            qs = qs.filter(is_bishoujo=is_bishoujo == "true")
         return qs
 
     def get_queryset(self):
@@ -68,6 +72,7 @@ class GameListView(ListView):
         ctx["selected_clear_statuses"] = self.request.GET.getlist("clear_status")
         ctx["selected_grades"] = self.request.GET.getlist("grade")
         ctx["selected_is_package"] = self.request.GET.get("is_package", "")
+        ctx["selected_is_bishoujo"] = self.request.GET.get("is_bishoujo", "")
         sort = self._get_sort()
         ctx["sort_field"] = sort.lstrip("-")
         ctx["sort_order"] = "desc" if sort.startswith("-") else "asc"
