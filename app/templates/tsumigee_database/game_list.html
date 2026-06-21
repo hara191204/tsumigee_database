@@ -2,7 +2,7 @@
 {% block page_title %}ゲーム一覧 | {% endblock page_title %}
 {% block navbar_actions %}
   <a href="{% url 'tsumigee_database:game_create' %}"
-     class="btn btn-primary btn-sm">追加</a>
+     class="btn btn-outline-light btn-sm">Add</a>
 {% endblock navbar_actions %}
 {% block content %}
   <h1 class="h3 mb-3">ゲーム一覧</h1>
@@ -38,7 +38,7 @@
                   data-bs-toggle="collapse"
                   data-bs-target="#filterCollapse"
                   aria-expanded="{% if is_filtered %}true{% else %}false{% endif %}"
-                  aria-controls="filterCollapse">絞り込み</button>
+                  aria-controls="filterCollapse">Filter</button>
         </h2>
         <div id="filterCollapse"
              class="accordion-collapse collapse {% if is_filtered %}show{% endif %}"
@@ -99,9 +99,9 @@
                   </div>
                 </div>
                 <div class="col-auto d-flex gap-1">
-                  <button type="submit" class="btn btn-outline-primary btn-sm">絞り込み</button>
+                  <button type="submit" class="btn btn-outline-primary btn-sm">Filter</button>
                   <a href="{% url 'tsumigee_database:game_list' %}"
-                     class="btn btn-outline-secondary btn-sm">クリア</a>
+                     class="btn btn-outline-secondary btn-sm">Clear</a>
                 </div>
               </div>
             </form>
@@ -259,11 +259,11 @@
         {% if page_obj.has_previous %}
           <li class="page-item">
             <a class="page-link"
-               href="?{% if filter_params %}{{ filter_params }}&{% endif %}page={{ page_obj.previous_page_number }}">前へ</a>
+               href="?{% if filter_params %}{{ filter_params }}&{% endif %}page={{ page_obj.previous_page_number }}">Prev</a>
           </li>
         {% else %}
           <li class="page-item disabled">
-            <span class="page-link">前へ</span>
+            <span class="page-link">Prev</span>
           </li>
         {% endif %}
         {% for num in page_obj.paginator.page_range %}
@@ -275,11 +275,11 @@
         {% if page_obj.has_next %}
           <li class="page-item">
             <a class="page-link"
-               href="?{% if filter_params %}{{ filter_params }}&{% endif %}page={{ page_obj.next_page_number }}">次へ</a>
+               href="?{% if filter_params %}{{ filter_params }}&{% endif %}page={{ page_obj.next_page_number }}">Next</a>
           </li>
         {% else %}
           <li class="page-item disabled">
-            <span class="page-link">次へ</span>
+            <span class="page-link">Next</span>
           </li>
         {% endif %}
       </ul>
