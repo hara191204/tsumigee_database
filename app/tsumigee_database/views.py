@@ -14,6 +14,7 @@ from .models import Game, Hard, Maker
 class GameListView(ListView):
     model = Game
     template_name = "tsumigee_database/game_list.html"
+    paginate_by = 20
 
     def get_queryset(self):
         qs = Game.objects.select_related("maker", "hard")
@@ -40,6 +41,9 @@ class GameListView(ListView):
         ctx["filters"] = self.request.GET
         ctx["selected_clear_statuses"] = self.request.GET.getlist("clear_status")
         ctx["selected_grades"] = self.request.GET.getlist("grade")
+        params = self.request.GET.copy()
+        params.pop("page", None)
+        ctx["filter_params"] = params.urlencode()
         return ctx
 
 
