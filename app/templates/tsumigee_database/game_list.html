@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% block title %}ゲーム一覧 | 積みゲーDB{% endblock title %}
+{% block navbar_actions %}
+  <a href="{% url 'tsumigee_database:game_create' %}"
+     class="btn btn-primary btn-sm">追加</a>
+{% endblock navbar_actions %}
 {% block content %}
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h1 class="h3">ゲーム一覧</h1>
-    <a href="{% url 'tsumigee_database:game_create' %}"
-       class="btn btn-primary">追加</a>
-  </div>
+  <h1 class="h3 mb-3">ゲーム一覧</h1>
   <div class="card mb-4">
     <div class="card-body">
       <div class="row align-items-center g-3">

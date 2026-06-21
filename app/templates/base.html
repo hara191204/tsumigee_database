@@ -12,11 +12,17 @@
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container">
-        <a class="navbar-brand" href="{% url 'tsumigee_database:game_list' %}">積みゲーDB</a>
-        <div class="navbar-nav flex-row ms-3 gap-3">
-          <a class="nav-link" href="{% url 'tsumigee_database:game_list' %}">ゲーム</a>
-          <a class="nav-link" href="{% url 'tsumigee_database:maker_list' %}">メーカー</a>
-          <a class="nav-link" href="{% url 'tsumigee_database:hard_list' %}">ハード</a>
+        <div class="d-flex align-items-center">
+          <a class="navbar-brand" href="{% url 'tsumigee_database:game_list' %}">積みゲーDB</a>
+          <div class="navbar-nav flex-row gap-3">
+            <a class="nav-link" href="{% url 'tsumigee_database:game_list' %}">ゲーム</a>
+            <a class="nav-link" href="{% url 'tsumigee_database:maker_list' %}">メーカー</a>
+            <a class="nav-link" href="{% url 'tsumigee_database:hard_list' %}">ハード</a>
+          </div>
+        </div>
+        <div class="ms-auto">
+          {% block navbar_actions %}
+          {% endblock navbar_actions %}
         </div>
       </div>
     </nav>

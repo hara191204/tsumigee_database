@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% block title %}メーカー一覧 | 積みゲーDB{% endblock title %}
+{% block navbar_actions %}
+  <a href="{% url 'tsumigee_database:maker_create' %}"
+     class="btn btn-primary btn-sm">追加</a>
+{% endblock navbar_actions %}
 {% block content %}
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h1 class="h3">メーカー一覧</h1>
-    <a href="{% url 'tsumigee_database:maker_create' %}"
-       class="btn btn-primary">追加</a>
-  </div>
+  <h1 class="h3 mb-3">メーカー一覧</h1>
   <table class="table table-hover">
     <thead class="table-dark">
       <tr>
