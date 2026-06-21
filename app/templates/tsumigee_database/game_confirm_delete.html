@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}ゲーム削除 | 積みゲーDB{% endblock title %}
+{% block page_title %}ゲーム削除 | {% endblock page_title %}
 {% block content %}
   <h1 class="h3 mb-3">ゲーム削除</h1>
   <p>
@@ -8,9 +8,9 @@
   <form method="post">
     {% csrf_token %}
     <div class="d-flex gap-2">
-      <button type="submit" class="btn btn-danger">削除する</button>
+      <button type="submit" class="btn btn-danger">Delete</button>
       <a href="{% url 'tsumigee_database:game_detail' game.pk %}"
-         class="btn btn-secondary">キャンセル</a>
+         class="btn btn-secondary">Cancel</a>
     </div>
   </form>
 {% endblock content %}

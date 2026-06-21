@@ -1,15 +1,15 @@
 {% extends "base.html" %}
-{% block title %}ハード一覧 | 積みゲーDB{% endblock title %}
+{% block page_title %}ハード一覧 | {% endblock page_title %}
+{% block navbar_actions %}
+  <a href="{% url 'tsumigee_database:hard_create' %}"
+     class="btn btn-outline-light btn-sm">Add</a>
+{% endblock navbar_actions %}
 {% block content %}
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h1 class="h3">ハード一覧</h1>
-    <a href="{% url 'tsumigee_database:hard_create' %}"
-       class="btn btn-primary">追加</a>
-  </div>
+  <h1 class="h3 mb-3">ハード一覧</h1>
   <table class="table table-hover">
     <thead class="table-dark">
       <tr>
-        <th class="text-center">No.</th>
+        <th class="text-center" style="width: 4rem">No.</th>
         <th>名前</th>
         <th class="text-center">操作</th>
       </tr>
@@ -21,7 +21,9 @@
           <td><a href="{% url 'tsumigee_database:hard_detail' hard.pk %}">{{ hard.name }}</a></td>
           <td class="text-center">
             <a href="{% url 'tsumigee_database:hard_update' hard.pk %}"
-               class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-pen-to-square"></i></a>
+               class="text-secondary">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </a>
           </td>
         </tr>
       {% empty %}

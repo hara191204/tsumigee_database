@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% block title %}ゲーム一覧 | 積みゲーDB{% endblock title %}
+{% block page_title %}ゲーム一覧 | {% endblock page_title %}
+{% block navbar_actions %}
+  <a href="{% url 'tsumigee_database:game_create' %}"
+     class="btn btn-outline-light btn-sm">Add</a>
+{% endblock navbar_actions %}
 {% block content %}
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h1 class="h3">ゲーム一覧</h1>
-    <a href="{% url 'tsumigee_database:game_create' %}"
-       class="btn btn-primary">追加</a>
-  </div>
+  <h1 class="h3 mb-3">ゲーム一覧</h1>
   <div class="card mb-4">
     <div class="card-body">
       <div class="row align-items-center g-3">
@@ -29,72 +29,102 @@
       </div>
     </div>
   </div>
-  <form method="get" class="mb-4">
-    <div class="row g-2 align-items-end">
-      <div class="col-auto">
-        <label class="form-label small fw-semibold mb-1">メーカー</label>
-        <select name="maker" class="form-select form-select-sm">
-          <option value="">すべて</option>
-          {% for maker in makers %}
-            <option value="{{ maker.pk }}"
-                    {% if filters.maker == maker.pk|stringformat:"s" %}selected{% endif %}>{{ maker.name }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <div class="col-auto">
-        <label class="form-label small fw-semibold mb-1">ハード</label>
-        <select name="hard" class="form-select form-select-sm">
-          <option value="">すべて</option>
-          {% for hard in hards %}
-            <option value="{{ hard.pk }}"
-                    {% if filters.hard == hard.pk|stringformat:"s" %}selected{% endif %}>{{ hard.name }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <div class="col-auto">
-        <label class="form-label small fw-semibold mb-1">クリア状況</label>
-        <div class="d-flex gap-3">
-          {% for value, label in clear_status_choices %}
-            <div class="form-check">
-              <input class="form-check-input"
-                     type="checkbox"
-                     name="clear_status"
-                     value="{{ value }}"
-                     id="cs_{{ value }}"
-                     {% if value in selected_clear_statuses %}checked{% endif %} />
-              <label class="form-check-label small" for="cs_{{ value }}">{{ label }}</label>
-            </div>
-          {% endfor %}
+  {% with is_filtered=selected_maker|default:selected_hard|default:selected_clear_statuses|default:selected_grades|default:selected_is_package %}
+    <div class="accordion mb-4" id="filterAccordion">
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button {% if not is_filtered %}collapsed{% endif %}"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#filterCollapse"
+                  aria-expanded="{% if is_filtered %}true{% else %}false{% endif %}"
+                  aria-controls="filterCollapse">Filter</button>
+        </h2>
+        <div id="filterCollapse"
+             class="accordion-collapse collapse {% if is_filtered %}show{% endif %}"
+             data-bs-parent="#filterAccordion">
+          <div class="accordion-body">
+            <form method="get">
+              <div class="row g-2 align-items-end">
+                <div class="col-auto">
+                  <label class="form-label small fw-semibold mb-1">メーカー</label>
+                  <select name="maker" class="form-select form-select-sm">
+                    <option value="">すべて</option>
+                    {% for maker in makers %}
+                      <option value="{{ maker.pk }}"
+                              {% if selected_maker == maker.pk|stringformat:"s" %}selected{% endif %}>{{ maker.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="col-auto">
+                  <label class="form-label small fw-semibold mb-1">ハード</label>
+                  <select name="hard" class="form-select form-select-sm">
+                    <option value="">すべて</option>
+                    {% for hard in hards %}
+                      <option value="{{ hard.pk }}"
+                              {% if selected_hard == hard.pk|stringformat:"s" %}selected{% endif %}>{{ hard.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="col-auto">
+                  <label class="form-label small fw-semibold mb-1">クリア状況</label>
+                  <div class="d-flex gap-3">
+                    {% for value, label in clear_status_choices %}
+                      <div class="form-check">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               name="clear_status"
+                               value="{{ value }}"
+                               id="cs_{{ value }}"
+                               {% if value in selected_clear_statuses %}checked{% endif %} />
+                        <label class="form-check-label small" for="cs_{{ value }}">{{ label }}</label>
+                      </div>
+                    {% endfor %}
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <label class="form-label small fw-semibold mb-1">評価</label>
+                  <div class="d-flex gap-3">
+                    {% for value, label in grade_choices %}
+                      <div class="form-check">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               name="grade"
+                               value="{{ value }}"
+                               id="gr_{{ value }}"
+                               {% if value in selected_grades %}checked{% endif %} />
+                        <label class="form-check-label small" for="gr_{{ value }}">{{ label }}</label>
+                      </div>
+                    {% endfor %}
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <label class="form-label small fw-semibold mb-1">パッケージ所有</label>
+                  <select name="is_package" class="form-select form-select-sm">
+                    <option value="" {% if selected_is_package == "" %}selected{% endif %}>すべて</option>
+                    <option value="true"
+                            {% if selected_is_package == "true" %}selected{% endif %}>✓ あり</option>
+                    <option value="false"
+                            {% if selected_is_package == "false" %}selected{% endif %}>- なし</option>
+                  </select>
+                </div>
+                <div class="col-auto d-flex gap-1">
+                  <button type="submit" class="btn btn-outline-primary btn-sm">Filter</button>
+                  <a href="{% url 'tsumigee_database:game_list' %}"
+                     class="btn btn-outline-secondary btn-sm">Clear</a>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
-      </div>
-      <div class="col-auto">
-        <label class="form-label small fw-semibold mb-1">評価</label>
-        <div class="d-flex gap-3">
-          {% for value, label in grade_choices %}
-            <div class="form-check">
-              <input class="form-check-input"
-                     type="checkbox"
-                     name="grade"
-                     value="{{ value }}"
-                     id="gr_{{ value }}"
-                     {% if value in selected_grades %}checked{% endif %} />
-              <label class="form-check-label small" for="gr_{{ value }}">{{ label }}</label>
-            </div>
-          {% endfor %}
-        </div>
-      </div>
-      <div class="col-auto d-flex gap-1">
-        <button type="submit" class="btn btn-outline-primary btn-sm">絞り込み</button>
-        <a href="{% url 'tsumigee_database:game_list' %}"
-           class="btn btn-outline-secondary btn-sm">クリア</a>
       </div>
     </div>
-  </form>
+  {% endwith %}
   <table class="table table-hover">
     <thead class="table-dark">
       {% with bp=base_params %}
         <tr>
-          <th class="text-center">No.</th>
+          <th class="text-center" style="width: 4rem">No.</th>
           <th>
             <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'furigana' and sort_order == 'asc' %}-{% endif %}furigana"
                class="text-white text-decoration-none">
@@ -117,7 +147,7 @@
               {% endif %}
             </a>
           </th>
-          <th>
+          <th class="text-center">
             <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'hard__name' and sort_order == 'asc' %}-{% endif %}hard__name"
                class="text-white text-decoration-none">
               ハード
@@ -131,7 +161,7 @@
                data-bs-toggle="tooltip"
                data-bs-title="（）内はプレイ機種"></i>
           </th>
-          <th>
+          <th class="text-center">
             <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'clear_status' and sort_order == 'asc' %}-{% endif %}clear_status"
                class="text-white text-decoration-none">
               クリア状況
@@ -142,7 +172,7 @@
               {% endif %}
             </a>
           </th>
-          <th>
+          <th class="text-center">
             <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'grade' and sort_order == 'asc' %}-{% endif %}grade"
                class="text-white text-decoration-none">
               評価
@@ -164,7 +194,7 @@
               {% endif %}
             </a>
           </th>
-          <th>
+          <th class="text-center">
             <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'created_at' and sort_order == 'asc' %}-{% endif %}created_at"
                class="text-white text-decoration-none">
               作成日
@@ -175,7 +205,7 @@
               {% endif %}
             </a>
           </th>
-          <th>
+          <th class="text-center">
             <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'cleared_at' and sort_order == 'asc' %}-{% endif %}cleared_at"
                class="text-white text-decoration-none">
               クリア日
@@ -186,7 +216,7 @@
               {% endif %}
             </a>
           </th>
-          <th>
+          <th class="text-center">
             <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'note' and sort_order == 'asc' %}-{% endif %}note"
                class="text-white text-decoration-none">
               備考
@@ -197,7 +227,6 @@
               {% endif %}
             </a>
           </th>
-          <th class="text-center">操作</th>
         </tr>
       {% endwith %}
     </thead>
@@ -209,24 +238,26 @@
             <a href="{% url 'tsumigee_database:game_detail' game.pk %}">{{ game.title }}</a>
           </td>
           <td>{{ game.maker }}</td>
-          <td>
+          <td class="text-center">
             {{ game.hard }}
             {% if game.play_hard %}（{{ game.play_hard }}）{% endif %}
           </td>
-          <td>{{ game.get_clear_status_display }}</td>
-          <td>{{ game.grade }}</td>
-          <td class="text-center">{{ game.is_package|yesno:"✓,-" }}</td>
-          <td class="text-nowrap">{{ game.created_at|date:"Y/m/d" }}</td>
-          <td class="text-nowrap">{{ game.cleared_at|date:"Y/m/d"|default:"-" }}</td>
-          <td>{{ game.note }}</td>
+          <td class="text-center">{{ game.get_clear_status_display }}</td>
+          <td class="text-center">{{ game.grade }}</td>
           <td class="text-center">
-            <a href="{% url 'tsumigee_database:game_update' game.pk %}"
-               class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-pen-to-square"></i></a>
+            {% if game.is_package %}
+              <i class="fa-solid fa-check"></i>
+            {% else %}
+              -
+            {% endif %}
           </td>
+          <td class="text-center text-nowrap">{{ game.created_at|date:"Y/m/d" }}</td>
+          <td class="text-center text-nowrap">{{ game.cleared_at|date:"Y/m/d"|default:"-" }}</td>
+          <td class="text-center">{{ game.note }}</td>
         </tr>
       {% empty %}
         <tr>
-          <td colspan="11" class="text-center text-muted">ゲームが登録されていません</td>
+          <td colspan="10" class="text-center text-muted">ゲームが登録されていません</td>
         </tr>
       {% endfor %}
     </tbody>
@@ -237,11 +268,11 @@
         {% if page_obj.has_previous %}
           <li class="page-item">
             <a class="page-link"
-               href="?{% if filter_params %}{{ filter_params }}&{% endif %}page={{ page_obj.previous_page_number }}">前へ</a>
+               href="?{% if filter_params %}{{ filter_params }}&{% endif %}page={{ page_obj.previous_page_number }}">Prev</a>
           </li>
         {% else %}
           <li class="page-item disabled">
-            <span class="page-link">前へ</span>
+            <span class="page-link">Prev</span>
           </li>
         {% endif %}
         {% for num in page_obj.paginator.page_range %}
@@ -253,11 +284,11 @@
         {% if page_obj.has_next %}
           <li class="page-item">
             <a class="page-link"
-               href="?{% if filter_params %}{{ filter_params }}&{% endif %}page={{ page_obj.next_page_number }}">次へ</a>
+               href="?{% if filter_params %}{{ filter_params }}&{% endif %}page={{ page_obj.next_page_number }}">Next</a>
           </li>
         {% else %}
           <li class="page-item disabled">
-            <span class="page-link">次へ</span>
+            <span class="page-link">Next</span>
           </li>
         {% endif %}
       </ul>

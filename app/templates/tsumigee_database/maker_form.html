@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}メーカー{{ action }} | 積みゲーDB{% endblock title %}
+{% block page_title %}メーカー{{ action }} | {% endblock page_title %}
 {% block content %}
   <h1 class="h3 mb-3">メーカー{{ action }}</h1>
   <form method="post" class="col-lg-4">
@@ -14,9 +14,9 @@
       </div>
     {% endfor %}
     <div class="d-flex gap-2 mt-4">
-      <button type="submit" class="btn btn-primary">保存</button>
+      <button type="submit" class="btn btn-primary">Save</button>
       <a href="{% url 'tsumigee_database:maker_list' %}"
-         class="btn btn-secondary">キャンセル</a>
+         class="btn btn-secondary">Cancel</a>
     </div>
   </form>
 {% endblock content %}

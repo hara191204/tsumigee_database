@@ -41,6 +41,7 @@ class GameListView(ListView):
         hard = self.request.GET.get("hard")
         clear_statuses = self.request.GET.getlist("clear_status")
         grades = self.request.GET.getlist("grade")
+        is_package = self.request.GET.get("is_package", "")
         if maker:
             qs = qs.filter(maker_id=maker)
         if hard:
@@ -49,6 +50,8 @@ class GameListView(ListView):
             qs = qs.filter(clear_status__in=clear_statuses)
         if grades:
             qs = qs.filter(grade__in=grades)
+        if is_package != "":
+            qs = qs.filter(is_package=is_package == "true")
         return qs
 
     def get_queryset(self):
@@ -60,9 +63,11 @@ class GameListView(ListView):
         ctx["hards"] = Hard.objects.all()
         ctx["clear_status_choices"] = Game.ClearStatusChoices.choices
         ctx["grade_choices"] = Game.GradeChoices.choices
-        ctx["filters"] = self.request.GET
+        ctx["selected_maker"] = self.request.GET.get("maker", "")
+        ctx["selected_hard"] = self.request.GET.get("hard", "")
         ctx["selected_clear_statuses"] = self.request.GET.getlist("clear_status")
         ctx["selected_grades"] = self.request.GET.getlist("grade")
+        ctx["selected_is_package"] = self.request.GET.get("is_package", "")
         sort = self._get_sort()
         ctx["sort_field"] = sort.lstrip("-")
         ctx["sort_order"] = "desc" if sort.startswith("-") else "asc"
