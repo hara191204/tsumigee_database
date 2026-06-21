@@ -29,67 +29,87 @@
       </div>
     </div>
   </div>
-  <form method="get" class="mb-4">
-    <div class="row g-2 align-items-end">
-      <div class="col-auto">
-        <label class="form-label small fw-semibold mb-1">メーカー</label>
-        <select name="maker" class="form-select form-select-sm">
-          <option value="">すべて</option>
-          {% for maker in makers %}
-            <option value="{{ maker.pk }}"
-                    {% if filters.maker == maker.pk|stringformat:"s" %}selected{% endif %}>{{ maker.name }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <div class="col-auto">
-        <label class="form-label small fw-semibold mb-1">ハード</label>
-        <select name="hard" class="form-select form-select-sm">
-          <option value="">すべて</option>
-          {% for hard in hards %}
-            <option value="{{ hard.pk }}"
-                    {% if filters.hard == hard.pk|stringformat:"s" %}selected{% endif %}>{{ hard.name }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <div class="col-auto">
-        <label class="form-label small fw-semibold mb-1">クリア状況</label>
-        <div class="d-flex gap-3">
-          {% for value, label in clear_status_choices %}
-            <div class="form-check">
-              <input class="form-check-input"
-                     type="checkbox"
-                     name="clear_status"
-                     value="{{ value }}"
-                     id="cs_{{ value }}"
-                     {% if value in selected_clear_statuses %}checked{% endif %} />
-              <label class="form-check-label small" for="cs_{{ value }}">{{ label }}</label>
-            </div>
-          {% endfor %}
+  {% with is_filtered=selected_maker|default:selected_hard|default:selected_clear_statuses|default:selected_grades %}
+    <div class="accordion mb-4" id="filterAccordion">
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button {% if not is_filtered %}collapsed{% endif %}"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#filterCollapse"
+                  aria-expanded="{% if is_filtered %}true{% else %}false{% endif %}"
+                  aria-controls="filterCollapse">絞り込み</button>
+        </h2>
+        <div id="filterCollapse"
+             class="accordion-collapse collapse {% if is_filtered %}show{% endif %}"
+             data-bs-parent="#filterAccordion">
+          <div class="accordion-body">
+            <form method="get">
+              <div class="row g-2 align-items-end">
+                <div class="col-auto">
+                  <label class="form-label small fw-semibold mb-1">メーカー</label>
+                  <select name="maker" class="form-select form-select-sm">
+                    <option value="">すべて</option>
+                    {% for maker in makers %}
+                      <option value="{{ maker.pk }}"
+                              {% if selected_maker == maker.pk|stringformat:"s" %}selected{% endif %}>{{ maker.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="col-auto">
+                  <label class="form-label small fw-semibold mb-1">ハード</label>
+                  <select name="hard" class="form-select form-select-sm">
+                    <option value="">すべて</option>
+                    {% for hard in hards %}
+                      <option value="{{ hard.pk }}"
+                              {% if selected_hard == hard.pk|stringformat:"s" %}selected{% endif %}>{{ hard.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="col-auto">
+                  <label class="form-label small fw-semibold mb-1">クリア状況</label>
+                  <div class="d-flex gap-3">
+                    {% for value, label in clear_status_choices %}
+                      <div class="form-check">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               name="clear_status"
+                               value="{{ value }}"
+                               id="cs_{{ value }}"
+                               {% if value in selected_clear_statuses %}checked{% endif %} />
+                        <label class="form-check-label small" for="cs_{{ value }}">{{ label }}</label>
+                      </div>
+                    {% endfor %}
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <label class="form-label small fw-semibold mb-1">評価</label>
+                  <div class="d-flex gap-3">
+                    {% for value, label in grade_choices %}
+                      <div class="form-check">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               name="grade"
+                               value="{{ value }}"
+                               id="gr_{{ value }}"
+                               {% if value in selected_grades %}checked{% endif %} />
+                        <label class="form-check-label small" for="gr_{{ value }}">{{ label }}</label>
+                      </div>
+                    {% endfor %}
+                  </div>
+                </div>
+                <div class="col-auto d-flex gap-1">
+                  <button type="submit" class="btn btn-outline-primary btn-sm">絞り込み</button>
+                  <a href="{% url 'tsumigee_database:game_list' %}"
+                     class="btn btn-outline-secondary btn-sm">クリア</a>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
-      </div>
-      <div class="col-auto">
-        <label class="form-label small fw-semibold mb-1">評価</label>
-        <div class="d-flex gap-3">
-          {% for value, label in grade_choices %}
-            <div class="form-check">
-              <input class="form-check-input"
-                     type="checkbox"
-                     name="grade"
-                     value="{{ value }}"
-                     id="gr_{{ value }}"
-                     {% if value in selected_grades %}checked{% endif %} />
-              <label class="form-check-label small" for="gr_{{ value }}">{{ label }}</label>
-            </div>
-          {% endfor %}
-        </div>
-      </div>
-      <div class="col-auto d-flex gap-1">
-        <button type="submit" class="btn btn-outline-primary btn-sm">絞り込み</button>
-        <a href="{% url 'tsumigee_database:game_list' %}"
-           class="btn btn-outline-secondary btn-sm">クリア</a>
       </div>
     </div>
-  </form>
+  {% endwith %}
   <table class="table table-hover">
     <thead class="table-dark">
       {% with bp=base_params %}

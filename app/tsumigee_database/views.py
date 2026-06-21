@@ -60,7 +60,8 @@ class GameListView(ListView):
         ctx["hards"] = Hard.objects.all()
         ctx["clear_status_choices"] = Game.ClearStatusChoices.choices
         ctx["grade_choices"] = Game.GradeChoices.choices
-        ctx["filters"] = self.request.GET
+        ctx["selected_maker"] = self.request.GET.get("maker", "")
+        ctx["selected_hard"] = self.request.GET.get("hard", "")
         ctx["selected_clear_statuses"] = self.request.GET.getlist("clear_status")
         ctx["selected_grades"] = self.request.GET.getlist("grade")
         sort = self._get_sort()
