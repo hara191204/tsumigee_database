@@ -85,7 +85,7 @@ class Game(models.Model):
     class ClearStatusChoices(models.TextChoices):
         CLEAR = "clear", "クリア"
         TSUMI = "tsumi", "積み"
-        COLLECTION_ONLY = "collection_only", "コレクションのみ"
+        COLLECTION_ONLY = "collection_only", "収集のみ"
 
     class GradeChoices(models.TextChoices):
         SPLUS = "S+", "S+"

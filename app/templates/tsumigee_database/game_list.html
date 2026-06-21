@@ -23,7 +23,7 @@
             総数：{{ stats.total }} ／
             <span class="text-success fw-semibold">クリア：{{ stats.clear }}</span> ／
             <span class="text-danger fw-semibold">積み：{{ stats.tsumi }}</span> ／
-            コレクションのみ：{{ stats.collection_only }}
+            収集のみ：{{ stats.collection_only }}
           </div>
         </div>
       </div>
@@ -330,7 +330,7 @@
     new Chart(canvas, {
       type: 'doughnut',
       data: {
-        labels: ['クリア', '積み', 'コレクションのみ'],
+        labels: ['クリア', '積み', '収集のみ'],
         datasets: [{
           data: [
             parseInt(canvas.dataset.clear),
