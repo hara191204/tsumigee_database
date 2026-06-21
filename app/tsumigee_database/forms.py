@@ -15,11 +15,12 @@ class GameForm(forms.ModelForm):
             "clear_status",
             "grade",
             "is_package",
+            "is_bishojo",
             "cleared_at",
             "note",
         ]
         widgets = {
-            "cleared_at": forms.DateTimeInput(attrs={"type": "datetime-local"}),
+            "cleared_at": forms.DateInput(attrs={"type": "date"}),
             "note": forms.Textarea(attrs={"rows": 4}),
         }
 
@@ -32,6 +33,18 @@ class GameForm(forms.ModelForm):
                 field.widget.attrs["class"] = "form-select"
             else:
                 field.widget.attrs["class"] = "form-control"
+
+    def clean(self):
+        cleaned_data = super().clean()
+        clear_status = cleaned_data.get("clear_status")
+        grade = cleaned_data.get("grade")
+        if clear_status == Game.ClearStatusChoices.CLEAR:
+            if grade == Game.GradeChoices.NA:
+                self.add_error("grade", "クリア時は評価を設定してください。")
+        else:
+            if grade != Game.GradeChoices.NA:
+                self.add_error("grade", "未クリア時は評価を「-」にしてください。")
+        return cleaned_data
 
 
 class BootstrapFormMixin:
@@ -49,7 +62,7 @@ class BootstrapFormMixin:
 class MakerForm(BootstrapFormMixin, forms.ModelForm):
     class Meta:
         model = Maker
-        fields = ["name", "furigana"]
+        fields = ["name", "furigana", "is_bishojo_brand"]
 
 
 class HardForm(BootstrapFormMixin, forms.ModelForm):

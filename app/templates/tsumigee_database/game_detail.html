@@ -41,7 +41,11 @@
         <td>{{ game.is_package|yesno:"あり,なし" }}</td>
       </tr>
       <tr>
-        <th class="table-secondary">クリア日時</th>
+        <th class="table-secondary">美少女ゲーム</th>
+        <td>{{ game.is_bishojo|yesno:"あり,なし" }}</td>
+      </tr>
+      <tr>
+        <th class="table-secondary">クリア日</th>
         <td>{{ game.cleared_at|default:"-" }}</td>
       </tr>
       <tr>

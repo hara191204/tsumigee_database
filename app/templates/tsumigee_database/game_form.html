@@ -4,7 +4,7 @@
   <div class="mb-3">
     <h1 class="h3">ゲーム{{ action }}</h1>
   </div>
-  <form method="post" class="col-lg-6">
+  <form method="post" class="col-lg-6" novalidate>
     {% csrf_token %}
     {% for field in form %}
       <div class="mb-3">

@@ -12,6 +12,7 @@
         <th class="text-center" style="width: 4rem">No.</th>
         <th>名前</th>
         <th>フリガナ</th>
+        <th class="text-center">美少女ブランド</th>
         <th class="text-center">操作</th>
       </tr>
     </thead>
@@ -22,6 +23,13 @@
           <td><a href="{% url 'tsumigee_database:maker_detail' maker.pk %}">{{ maker.name }}</a></td>
           <td>{{ maker.furigana }}</td>
           <td class="text-center">
+            {% if maker.is_bishojo_brand %}
+              <i class="fa-solid fa-check"></i>
+            {% else %}
+              -
+            {% endif %}
+          </td>
+          <td class="text-center">
             <a href="{% url 'tsumigee_database:maker_update' maker.pk %}"
                class="text-secondary">
               <i class="fa-solid fa-pen-to-square"></i>
@@ -30,7 +38,7 @@
         </tr>
       {% empty %}
         <tr>
-          <td colspan="4" class="text-center text-muted">メーカーが登録されていません</td>
+          <td colspan="5" class="text-center text-muted">メーカーが登録されていません</td>
         </tr>
       {% endfor %}
     </tbody>
