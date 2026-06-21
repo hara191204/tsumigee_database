@@ -29,7 +29,7 @@
       </div>
     </div>
   </div>
-  {% with is_filtered=selected_maker|default:selected_hard|default:selected_clear_statuses|default:selected_grades %}
+  {% with is_filtered=selected_maker|default:selected_hard|default:selected_clear_statuses|default:selected_grades|default:selected_is_package %}
     <div class="accordion mb-4" id="filterAccordion">
       <div class="accordion-item">
         <h2 class="accordion-header">
@@ -97,6 +97,16 @@
                       </div>
                     {% endfor %}
                   </div>
+                </div>
+                <div class="col-auto">
+                  <label class="form-label small fw-semibold mb-1">パッケージ所有</label>
+                  <select name="is_package" class="form-select form-select-sm">
+                    <option value="" {% if selected_is_package == "" %}selected{% endif %}>すべて</option>
+                    <option value="true"
+                            {% if selected_is_package == "true" %}selected{% endif %}>✓ あり</option>
+                    <option value="false"
+                            {% if selected_is_package == "false" %}selected{% endif %}>- なし</option>
+                  </select>
                 </div>
                 <div class="col-auto d-flex gap-1">
                   <button type="submit" class="btn btn-outline-primary btn-sm">Filter</button>
@@ -217,7 +227,6 @@
               {% endif %}
             </a>
           </th>
-          <th class="text-center">操作</th>
         </tr>
       {% endwith %}
     </thead>
@@ -235,20 +244,20 @@
           </td>
           <td class="text-center">{{ game.get_clear_status_display }}</td>
           <td class="text-center">{{ game.grade }}</td>
-          <td class="text-center">{{ game.is_package|yesno:"✓,-" }}</td>
+          <td class="text-center">
+            {% if game.is_package %}
+              <i class="fa-solid fa-check"></i>
+            {% else %}
+              -
+            {% endif %}
+          </td>
           <td class="text-center text-nowrap">{{ game.created_at|date:"Y/m/d" }}</td>
           <td class="text-center text-nowrap">{{ game.cleared_at|date:"Y/m/d"|default:"-" }}</td>
           <td class="text-center">{{ game.note }}</td>
-          <td class="text-center">
-            <a href="{% url 'tsumigee_database:game_update' game.pk %}"
-               class="text-secondary">
-              <i class="fa-solid fa-pen-to-square"></i>
-            </a>
-          </td>
         </tr>
       {% empty %}
         <tr>
-          <td colspan="11" class="text-center text-muted">ゲームが登録されていません</td>
+          <td colspan="10" class="text-center text-muted">ゲームが登録されていません</td>
         </tr>
       {% endfor %}
     </tbody>
