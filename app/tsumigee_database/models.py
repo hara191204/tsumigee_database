@@ -169,8 +169,8 @@ class Game(models.Model):
     # clear_statusが「積み」から「クリア」に変わったタイミングで記録する。
     # 自動更新ではないため、保存処理側（save()のオーバーライドやフォーム側）で
     # 明示的にセットする実装が別途必要
-    cleared_at = models.DateTimeField(
-        verbose_name="クリア日時",
+    cleared_at = models.DateField(
+        verbose_name="クリア日",
         null=True,
         blank=True,
     )

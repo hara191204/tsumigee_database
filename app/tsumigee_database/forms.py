@@ -20,7 +20,7 @@ class GameForm(forms.ModelForm):
             "note",
         ]
         widgets = {
-            "cleared_at": forms.DateTimeInput(attrs={"type": "datetime-local"}),
+            "cleared_at": forms.DateInput(attrs={"type": "date"}),
             "note": forms.Textarea(attrs={"rows": 4}),
         }
 
