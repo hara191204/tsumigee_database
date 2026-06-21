@@ -1,0 +1,71 @@
+{% extends "base.html" %} {% block title %}{{ game.title }} | 積みゲーDB{%
+endblock %} {% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h3">{{ game.title }}</h1>
+  <div>
+    <a
+      href="{% url 'tsumigee_database:game_update' game.pk %}"
+      class="btn btn-outline-secondary btn-sm"
+      >編集</a
+    >
+    <a
+      href="{% url 'tsumigee_database:game_delete' game.pk %}"
+      class="btn btn-outline-danger btn-sm"
+      >削除</a
+    >
+  </div>
+</div>
+
+<table class="table table-bordered w-auto">
+  <tbody>
+    <tr>
+      <th class="table-secondary">フリガナ</th>
+      <td>{{ game.furigana }}</td>
+    </tr>
+    <tr>
+      <th class="table-secondary">メーカー</th>
+      <td>{{ game.maker }}</td>
+    </tr>
+    <tr>
+      <th class="table-secondary">ハード</th>
+      <td>{{ game.hard }}</td>
+    </tr>
+    <tr>
+      <th class="table-secondary">プレイ機種</th>
+      <td>{{ game.play_hard|default:"-" }}</td>
+    </tr>
+    <tr>
+      <th class="table-secondary">クリア状況</th>
+      <td>{{ game.get_clear_status_display }}</td>
+    </tr>
+    <tr>
+      <th class="table-secondary">評価</th>
+      <td>{{ game.grade }}</td>
+    </tr>
+    <tr>
+      <th class="table-secondary">パッケージ所有</th>
+      <td>{{ game.is_package|yesno:"あり,なし" }}</td>
+    </tr>
+    <tr>
+      <th class="table-secondary">クリア日時</th>
+      <td>{{ game.cleared_at|default:"-" }}</td>
+    </tr>
+    <tr>
+      <th class="table-secondary">備考</th>
+      <td>{{ game.note|default:"-" }}</td>
+    </tr>
+    <tr>
+      <th class="table-secondary">登録日時</th>
+      <td>{{ game.created_at }}</td>
+    </tr>
+    <tr>
+      <th class="table-secondary">更新日時</th>
+      <td>{{ game.updated_at }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<a href="{% url 'tsumigee_database:game_list' %}" class="btn btn-secondary mt-2"
+  >一覧に戻る</a
+>
+{% endblock %}

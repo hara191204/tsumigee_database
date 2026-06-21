@@ -1,0 +1,42 @@
+{% extends "base.html" %} {% block title %}ゲーム一覧 | 積みゲーDB{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h3">ゲーム一覧</h1>
+  <a href="{% url 'tsumigee_database:game_create' %}" class="btn btn-primary"
+    >追加</a
+  >
+</div>
+
+<table class="table table-hover">
+  <thead class="table-dark">
+    <tr>
+      <th>タイトル</th>
+      <th>メーカー</th>
+      <th>ハード</th>
+      <th>クリア状況</th>
+      <th>評価</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for game in game_list %}
+    <tr>
+      <td>
+        <a href="{% url 'tsumigee_database:game_detail' game.pk %}"
+          >{{ game.title }}</a
+        >
+      </td>
+      <td>{{ game.maker }}</td>
+      <td>{{ game.hard }}</td>
+      <td>{{ game.get_clear_status_display }}</td>
+      <td>{{ game.grade }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="5" class="text-center text-muted">
+        ゲームが登録されていません
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
