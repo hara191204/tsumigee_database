@@ -14,6 +14,7 @@ urlpatterns = [
     # Maker
     path("makers/", views.MakerListView.as_view(), name="maker_list"),
     path("makers/create/", views.MakerCreateView.as_view(), name="maker_create"),
+    path("makers/<int:pk>/", views.MakerDetailView.as_view(), name="maker_detail"),
     path(
         "makers/<int:pk>/update/", views.MakerUpdateView.as_view(), name="maker_update"
     ),
@@ -23,6 +24,7 @@ urlpatterns = [
     # Hard
     path("hards/", views.HardListView.as_view(), name="hard_list"),
     path("hards/create/", views.HardCreateView.as_view(), name="hard_create"),
+    path("hards/<int:pk>/", views.HardDetailView.as_view(), name="hard_detail"),
     path("hards/<int:pk>/update/", views.HardUpdateView.as_view(), name="hard_update"),
     path("hards/<int:pk>/delete/", views.HardDeleteView.as_view(), name="hard_delete"),
 ]

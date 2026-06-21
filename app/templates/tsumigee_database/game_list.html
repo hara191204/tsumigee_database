@@ -6,6 +6,29 @@
     <a href="{% url 'tsumigee_database:game_create' %}"
        class="btn btn-primary">追加</a>
   </div>
+  <div class="card mb-4">
+    <div class="card-body">
+      <div class="row align-items-center g-3">
+        <div class="col-auto">
+          <canvas id="statsPieChart"
+                  width="160"
+                  height="120"
+                  data-clear="{{ stats.clear }}"
+                  data-tsumi="{{ stats.tsumi }}"
+                  data-na="{{ stats.na }}"></canvas>
+        </div>
+        <div class="col">
+          <div class="fs-4 fw-bold mb-1">積み率：{{ stats.tsumi_ratio }}%</div>
+          <div class="text-muted small">
+            総数：{{ stats.total }} ／
+            <span class="text-success fw-semibold">クリア：{{ stats.clear }}</span> ／
+            <span class="text-danger fw-semibold">積み：{{ stats.tsumi }}</span> ／
+            N/A：{{ stats.na }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   <form method="get" class="mb-4">
     <div class="row g-2 align-items-end">
       <div class="col-auto">
@@ -69,18 +92,114 @@
   </form>
   <table class="table table-hover">
     <thead class="table-dark">
-      <tr>
-        <th class="text-center">No.</th>
-        <th>タイトル</th>
-        <th>メーカー</th>
-        <th>ハード</th>
-        <th>クリア状況</th>
-        <th>評価</th>
-        <th class="text-center">パッケージ所有</th>
-        <th>作成日</th>
-        <th>クリア日</th>
-        <th>備考</th>
-      </tr>
+      {% with bp=base_params %}
+        <tr>
+          <th class="text-center">No.</th>
+          <th>
+            <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'furigana' and sort_order == 'asc' %}-{% endif %}furigana"
+               class="text-white text-decoration-none">
+              タイトル
+              {% if sort_field == 'furigana' %}
+                <i class="fa-solid fa-sort-{{ sort_order }} ms-1"></i>
+              {% else %}
+                <i class="fa-solid fa-sort ms-1 opacity-25"></i>
+              {% endif %}
+            </a>
+          </th>
+          <th>
+            <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'maker__furigana' and sort_order == 'asc' %}-{% endif %}maker__furigana"
+               class="text-white text-decoration-none">
+              メーカー
+              {% if sort_field == 'maker__furigana' %}
+                <i class="fa-solid fa-sort-{{ sort_order }} ms-1"></i>
+              {% else %}
+                <i class="fa-solid fa-sort ms-1 opacity-25"></i>
+              {% endif %}
+            </a>
+          </th>
+          <th>
+            <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'hard__name' and sort_order == 'asc' %}-{% endif %}hard__name"
+               class="text-white text-decoration-none">
+              ハード
+              {% if sort_field == 'hard__name' %}
+                <i class="fa-solid fa-sort-{{ sort_order }} ms-1"></i>
+              {% else %}
+                <i class="fa-solid fa-sort ms-1 opacity-25"></i>
+              {% endif %}
+            </a>
+            <i class="fa-solid fa-circle-info text-secondary small"
+               data-bs-toggle="tooltip"
+               data-bs-title="（）内はプレイ機種"></i>
+          </th>
+          <th>
+            <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'clear_status' and sort_order == 'asc' %}-{% endif %}clear_status"
+               class="text-white text-decoration-none">
+              クリア状況
+              {% if sort_field == 'clear_status' %}
+                <i class="fa-solid fa-sort-{{ sort_order }} ms-1"></i>
+              {% else %}
+                <i class="fa-solid fa-sort ms-1 opacity-25"></i>
+              {% endif %}
+            </a>
+          </th>
+          <th>
+            <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'grade' and sort_order == 'asc' %}-{% endif %}grade"
+               class="text-white text-decoration-none">
+              評価
+              {% if sort_field == 'grade' %}
+                <i class="fa-solid fa-sort-{{ sort_order }} ms-1"></i>
+              {% else %}
+                <i class="fa-solid fa-sort ms-1 opacity-25"></i>
+              {% endif %}
+            </a>
+          </th>
+          <th class="text-center">
+            <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'is_package' and sort_order == 'asc' %}-{% endif %}is_package"
+               class="text-white text-decoration-none">
+              パッケージ所有
+              {% if sort_field == 'is_package' %}
+                <i class="fa-solid fa-sort-{{ sort_order }} ms-1"></i>
+              {% else %}
+                <i class="fa-solid fa-sort ms-1 opacity-25"></i>
+              {% endif %}
+            </a>
+          </th>
+          <th>
+            <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'created_at' and sort_order == 'asc' %}-{% endif %}created_at"
+               class="text-white text-decoration-none">
+              作成日
+              {% if sort_field == 'created_at' %}
+                <i class="fa-solid fa-sort-{{ sort_order }} ms-1"></i>
+              {% else %}
+                <i class="fa-solid fa-sort ms-1 opacity-25"></i>
+              {% endif %}
+            </a>
+          </th>
+          <th>
+            <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'cleared_at' and sort_order == 'asc' %}-{% endif %}cleared_at"
+               class="text-white text-decoration-none">
+              クリア日
+              {% if sort_field == 'cleared_at' %}
+                <i class="fa-solid fa-sort-{{ sort_order }} ms-1"></i>
+              {% else %}
+                <i class="fa-solid fa-sort ms-1 opacity-25"></i>
+              {% endif %}
+            </a>
+          </th>
+          <th>
+            <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'note' and sort_order == 'asc' %}-{% endif %}note"
+               class="text-white text-decoration-none">
+              備考
+              {% if sort_field == 'note' %}
+                <i class="fa-solid fa-sort-{{ sort_order }} ms-1"></i>
+              {% else %}
+                <i class="fa-solid fa-sort ms-1 opacity-25"></i>
+              {% endif %}
+            </a>
+          </th>
+          <th class="text-center">操作</th>
+        </tr>
+      {% endwith %}
     </thead>
     <tbody>
       {% for game in game_list %}
@@ -90,17 +209,24 @@
             <a href="{% url 'tsumigee_database:game_detail' game.pk %}">{{ game.title }}</a>
           </td>
           <td>{{ game.maker }}</td>
-          <td>{{ game.hard }}</td>
+          <td>
+            {{ game.hard }}
+            {% if game.play_hard %}（{{ game.play_hard }}）{% endif %}
+          </td>
           <td>{{ game.get_clear_status_display }}</td>
           <td>{{ game.grade }}</td>
           <td class="text-center">{{ game.is_package|yesno:"✓,-" }}</td>
           <td class="text-nowrap">{{ game.created_at|date:"Y/m/d" }}</td>
           <td class="text-nowrap">{{ game.cleared_at|date:"Y/m/d"|default:"-" }}</td>
           <td>{{ game.note }}</td>
+          <td class="text-center">
+            <a href="{% url 'tsumigee_database:game_update' game.pk %}"
+               class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-pen-to-square"></i></a>
+          </td>
         </tr>
       {% empty %}
         <tr>
-          <td colspan="10" class="text-center text-muted">ゲームが登録されていません</td>
+          <td colspan="11" class="text-center text-muted">ゲームが登録されていません</td>
         </tr>
       {% endfor %}
     </tbody>
@@ -138,3 +264,30 @@
     </nav>
   {% endif %}
 {% endblock content %}
+{% block scripts %}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <script>
+    const canvas = document.getElementById('statsPieChart')
+    new Chart(canvas, {
+      type: 'doughnut',
+      data: {
+        labels: ['クリア', '積み', 'N/A'],
+        datasets: [{
+          data: [
+            parseInt(canvas.dataset.clear),
+            parseInt(canvas.dataset.tsumi),
+            parseInt(canvas.dataset.na),
+          ],
+          backgroundColor: ['#198754', '#dc3545', '#6c757d'],
+          borderWidth: 0,
+        }]
+      },
+      options: {
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'right', labels: { boxWidth: 12 } }
+        }
+      }
+    })
+  </script>
+{% endblock scripts %}
