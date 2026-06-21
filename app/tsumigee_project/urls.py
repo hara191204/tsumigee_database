@@ -17,9 +17,13 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import include, path
+from django.views.generic import RedirectView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path(
+        "", RedirectView.as_view(pattern_name="tsumigee_database:game_list"), name="top"
+    ),
     path("", include("tsumigee_database.urls")),
     # 将来の REST API: path("api/", include("tsumigee_database.api_urls")),
 ]
