@@ -1,0 +1,23 @@
+{% extends "base.html" %} {% block title %}ハード{{ action }} | 積みゲーDB{%
+endblock %} {% block content %}
+<h1 class="h3 mb-3">ハード{{ action }}</h1>
+
+<form method="post" class="col-lg-4">
+  {% csrf_token %} {% for field in form %}
+  <div class="mb-3">
+    <label for="{{ field.id_for_label }}" class="form-label fw-semibold"
+      >{{ field.label }}</label
+    >
+    {{ field }} {% if field.errors %}
+    <div class="text-danger small mt-1">{{ field.errors }}</div>
+    {% endif %}
+  </div>
+  {% endfor %}
+  <div class="d-flex gap-2 mt-4">
+    <button type="submit" class="btn btn-primary">保存</button>
+    <a href="{% url 'tsumigee_database:hard_list' %}" class="btn btn-secondary"
+      >キャンセル</a
+    >
+  </div>
+</form>
+{% endblock %}

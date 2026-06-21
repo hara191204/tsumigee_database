@@ -15,6 +15,17 @@
         <a class="navbar-brand" href="{% url 'tsumigee_database:game_list' %}"
           >積みゲーDB</a
         >
+        <div class="navbar-nav ms-3">
+          <a class="nav-link" href="{% url 'tsumigee_database:game_list' %}"
+            >ゲーム</a
+          >
+          <a class="nav-link" href="{% url 'tsumigee_database:maker_list' %}"
+            >メーカー</a
+          >
+          <a class="nav-link" href="{% url 'tsumigee_database:hard_list' %}"
+            >ハード</a
+          >
+        </div>
       </div>
     </nav>
 

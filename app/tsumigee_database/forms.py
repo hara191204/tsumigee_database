@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Game
+from .models import Game, Hard, Maker
 
 
 class GameForm(forms.ModelForm):
@@ -32,3 +32,27 @@ class GameForm(forms.ModelForm):
                 field.widget.attrs["class"] = "form-select"
             else:
                 field.widget.attrs["class"] = "form-control"
+
+
+class BootstrapFormMixin:
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            if isinstance(field.widget, forms.CheckboxInput):
+                field.widget.attrs["class"] = "form-check-input"
+            elif isinstance(field.widget, forms.Select):
+                field.widget.attrs["class"] = "form-select"
+            else:
+                field.widget.attrs["class"] = "form-control"
+
+
+class MakerForm(BootstrapFormMixin, forms.ModelForm):
+    class Meta:
+        model = Maker
+        fields = ["name", "furigana"]
+
+
+class HardForm(BootstrapFormMixin, forms.ModelForm):
+    class Meta:
+        model = Hard
+        fields = ["name"]
