@@ -137,7 +137,7 @@
               {% endif %}
             </a>
           </th>
-          <th>
+          <th class="text-center">
             <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'hard__name' and sort_order == 'asc' %}-{% endif %}hard__name"
                class="text-white text-decoration-none">
               ハード
@@ -151,7 +151,7 @@
                data-bs-toggle="tooltip"
                data-bs-title="（）内はプレイ機種"></i>
           </th>
-          <th>
+          <th class="text-center">
             <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'clear_status' and sort_order == 'asc' %}-{% endif %}clear_status"
                class="text-white text-decoration-none">
               クリア状況
@@ -162,7 +162,7 @@
               {% endif %}
             </a>
           </th>
-          <th>
+          <th class="text-center">
             <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'grade' and sort_order == 'asc' %}-{% endif %}grade"
                class="text-white text-decoration-none">
               評価
@@ -184,7 +184,7 @@
               {% endif %}
             </a>
           </th>
-          <th>
+          <th class="text-center">
             <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'created_at' and sort_order == 'asc' %}-{% endif %}created_at"
                class="text-white text-decoration-none">
               作成日
@@ -195,7 +195,7 @@
               {% endif %}
             </a>
           </th>
-          <th>
+          <th class="text-center">
             <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'cleared_at' and sort_order == 'asc' %}-{% endif %}cleared_at"
                class="text-white text-decoration-none">
               クリア日
@@ -206,7 +206,7 @@
               {% endif %}
             </a>
           </th>
-          <th>
+          <th class="text-center">
             <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'note' and sort_order == 'asc' %}-{% endif %}note"
                class="text-white text-decoration-none">
               備考
@@ -229,16 +229,16 @@
             <a href="{% url 'tsumigee_database:game_detail' game.pk %}">{{ game.title }}</a>
           </td>
           <td>{{ game.maker }}</td>
-          <td>
+          <td class="text-center">
             {{ game.hard }}
             {% if game.play_hard %}（{{ game.play_hard }}）{% endif %}
           </td>
-          <td>{{ game.get_clear_status_display }}</td>
-          <td>{{ game.grade }}</td>
+          <td class="text-center">{{ game.get_clear_status_display }}</td>
+          <td class="text-center">{{ game.grade }}</td>
           <td class="text-center">{{ game.is_package|yesno:"✓,-" }}</td>
-          <td class="text-nowrap">{{ game.created_at|date:"Y/m/d" }}</td>
-          <td class="text-nowrap">{{ game.cleared_at|date:"Y/m/d"|default:"-" }}</td>
-          <td>{{ game.note }}</td>
+          <td class="text-center text-nowrap">{{ game.created_at|date:"Y/m/d" }}</td>
+          <td class="text-center text-nowrap">{{ game.cleared_at|date:"Y/m/d"|default:"-" }}</td>
+          <td class="text-center">{{ game.note }}</td>
           <td class="text-center">
             <a href="{% url 'tsumigee_database:game_update' game.pk %}"
                class="text-secondary">
