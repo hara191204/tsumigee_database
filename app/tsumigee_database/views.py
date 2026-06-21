@@ -15,6 +15,33 @@ class GameListView(ListView):
     model = Game
     template_name = "tsumigee_database/game_list.html"
 
+    def get_queryset(self):
+        qs = Game.objects.select_related("maker", "hard")
+        maker = self.request.GET.get("maker")
+        hard = self.request.GET.get("hard")
+        clear_statuses = self.request.GET.getlist("clear_status")
+        grades = self.request.GET.getlist("grade")
+        if maker:
+            qs = qs.filter(maker_id=maker)
+        if hard:
+            qs = qs.filter(hard_id=hard)
+        if clear_statuses:
+            qs = qs.filter(clear_status__in=clear_statuses)
+        if grades:
+            qs = qs.filter(grade__in=grades)
+        return qs
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["makers"] = Maker.objects.all()
+        ctx["hards"] = Hard.objects.all()
+        ctx["clear_status_choices"] = Game.ClearStatusChoices.choices
+        ctx["grade_choices"] = Game.GradeChoices.choices
+        ctx["filters"] = self.request.GET
+        ctx["selected_clear_statuses"] = self.request.GET.getlist("clear_status")
+        ctx["selected_grades"] = self.request.GET.getlist("grade")
+        return ctx
+
 
 class GameDetailView(DetailView):
     model = Game

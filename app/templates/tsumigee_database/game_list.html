@@ -1,42 +1,98 @@
-{% extends "base.html" %} {% block title %}ゲーム一覧 | 積みゲーDB{% endblock %}
+{% extends "base.html" %}
+{% block title %}ゲーム一覧 | 積みゲーDB{% endblock title %}
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <h1 class="h3">ゲーム一覧</h1>
-  <a href="{% url 'tsumigee_database:game_create' %}" class="btn btn-primary"
-    >追加</a
-  >
-</div>
-
-<table class="table table-hover">
-  <thead class="table-dark">
-    <tr>
-      <th>タイトル</th>
-      <th>メーカー</th>
-      <th>ハード</th>
-      <th>クリア状況</th>
-      <th>評価</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for game in game_list %}
-    <tr>
-      <td>
-        <a href="{% url 'tsumigee_database:game_detail' game.pk %}"
-          >{{ game.title }}</a
-        >
-      </td>
-      <td>{{ game.maker }}</td>
-      <td>{{ game.hard }}</td>
-      <td>{{ game.get_clear_status_display }}</td>
-      <td>{{ game.grade }}</td>
-    </tr>
-    {% empty %}
-    <tr>
-      <td colspan="5" class="text-center text-muted">
-        ゲームが登録されていません
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% endblock %}
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3">ゲーム一覧</h1>
+    <a href="{% url 'tsumigee_database:game_create' %}"
+       class="btn btn-primary">追加</a>
+  </div>
+  <form method="get" class="mb-4">
+    <div class="row g-2 align-items-end">
+      <div class="col-auto">
+        <label class="form-label small fw-semibold mb-1">メーカー</label>
+        <select name="maker" class="form-select form-select-sm">
+          <option value="">すべて</option>
+          {% for maker in makers %}
+            <option value="{{ maker.pk }}"
+                    {% if filters.maker == maker.pk|stringformat:"s" %}selected{% endif %}>{{ maker.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-auto">
+        <label class="form-label small fw-semibold mb-1">ハード</label>
+        <select name="hard" class="form-select form-select-sm">
+          <option value="">すべて</option>
+          {% for hard in hards %}
+            <option value="{{ hard.pk }}"
+                    {% if filters.hard == hard.pk|stringformat:"s" %}selected{% endif %}>{{ hard.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-auto">
+        <label class="form-label small fw-semibold mb-1">クリア状況</label>
+        <div class="d-flex gap-3">
+          {% for value, label in clear_status_choices %}
+            <div class="form-check">
+              <input class="form-check-input"
+                     type="checkbox"
+                     name="clear_status"
+                     value="{{ value }}"
+                     id="cs_{{ value }}"
+                     {% if value in selected_clear_statuses %}checked{% endif %} />
+              <label class="form-check-label small" for="cs_{{ value }}">{{ label }}</label>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="col-auto">
+        <label class="form-label small fw-semibold mb-1">評価</label>
+        <div class="d-flex gap-3">
+          {% for value, label in grade_choices %}
+            <div class="form-check">
+              <input class="form-check-input"
+                     type="checkbox"
+                     name="grade"
+                     value="{{ value }}"
+                     id="gr_{{ value }}"
+                     {% if value in selected_grades %}checked{% endif %} />
+              <label class="form-check-label small" for="gr_{{ value }}">{{ label }}</label>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="col-auto d-flex gap-1">
+        <button type="submit" class="btn btn-outline-primary btn-sm">絞り込み</button>
+        <a href="{% url 'tsumigee_database:game_list' %}"
+           class="btn btn-outline-secondary btn-sm">クリア</a>
+      </div>
+    </div>
+  </form>
+  <table class="table table-hover">
+    <thead class="table-dark">
+      <tr>
+        <th>タイトル</th>
+        <th>メーカー</th>
+        <th>ハード</th>
+        <th>クリア状況</th>
+        <th>評価</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for game in game_list %}
+        <tr>
+          <td>
+            <a href="{% url 'tsumigee_database:game_detail' game.pk %}">{{ game.title }}</a>
+          </td>
+          <td>{{ game.maker }}</td>
+          <td>{{ game.hard }}</td>
+          <td>{{ game.get_clear_status_display }}</td>
+          <td>{{ game.grade }}</td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="5" class="text-center text-muted">ゲームが登録されていません</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock content %}
