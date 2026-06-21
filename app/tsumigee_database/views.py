@@ -83,6 +83,11 @@ class GameDeleteView(DeleteView):
 # --- Maker ---
 
 
+class MakerDetailView(DetailView):
+    model = Maker
+    template_name = "tsumigee_database/maker_detail.html"
+
+
 class MakerListView(ListView):
     model = Maker
     template_name = "tsumigee_database/maker_list.html"
@@ -119,6 +124,11 @@ class MakerDeleteView(DeleteView):
 
 
 # --- Hard ---
+
+
+class HardDetailView(DetailView):
+    model = Hard
+    template_name = "tsumigee_database/hard_detail.html"
 
 
 class HardListView(ListView):

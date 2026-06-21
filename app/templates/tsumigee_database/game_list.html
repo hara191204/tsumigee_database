@@ -80,6 +80,7 @@
         <th>作成日</th>
         <th>クリア日</th>
         <th>備考</th>
+        <th class="text-center">操作</th>
       </tr>
     </thead>
     <tbody>
@@ -97,10 +98,14 @@
           <td class="text-nowrap">{{ game.created_at|date:"Y/m/d" }}</td>
           <td class="text-nowrap">{{ game.cleared_at|date:"Y/m/d"|default:"-" }}</td>
           <td>{{ game.note }}</td>
+          <td class="text-center">
+            <a href="{% url 'tsumigee_database:game_update' game.pk %}"
+               class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-pen-to-square"></i></a>
+          </td>
         </tr>
       {% empty %}
         <tr>
-          <td colspan="10" class="text-center text-muted">ゲームが登録されていません</td>
+          <td colspan="11" class="text-center text-muted">ゲームが登録されていません</td>
         </tr>
       {% endfor %}
     </tbody>
