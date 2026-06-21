@@ -1,0 +1,59 @@
+services:
+  db:
+    image: mysql:8.4
+    container_name: tsumigee_db
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      # ホスト側からも直接DBに繋ぎたい場合用（不要ならこの行は削除してOK）
+      - "3306:3306"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u${MYSQL_USER}",
+          "-p${MYSQL_PASSWORD}",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tsumigee_web
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      # 開発中はコード変更を即時反映させるためバインドマウント
+      - ./app:/code
+    ports:
+      - "8000:8000"
+    # 開発用オーバーライド: --reload でコード変更を自動検知してワーカーを再起動
+    # 本番(Dockerfile内のデフォルトCMD)では使わない設定
+    command: >
+      gunicorn tsumigee_project.wsgi:application
+      --bind 0.0.0.0:8000
+      --workers 3
+      --reload
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  mysql_data:
