@@ -2,7 +2,7 @@
 {% block page_title %}メーカー{{ action }} | {% endblock page_title %}
 {% block content %}
   <h1 class="h3 mb-3">メーカー{{ action }}</h1>
-  <form method="post" class="col-lg-4">
+  <form method="post" class="col-lg-4" novalidate>
     {% csrf_token %}
     {% for field in form %}
       <div class="mb-3">
