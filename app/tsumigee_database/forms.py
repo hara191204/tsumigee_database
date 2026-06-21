@@ -34,6 +34,18 @@ class GameForm(forms.ModelForm):
             else:
                 field.widget.attrs["class"] = "form-control"
 
+    def clean(self):
+        cleaned_data = super().clean()
+        clear_status = cleaned_data.get("clear_status")
+        grade = cleaned_data.get("grade")
+        if clear_status == Game.ClearStatusChoices.CLEAR:
+            if grade == Game.GradeChoices.NA:
+                self.add_error("grade", "クリア時は評価を設定してください。")
+        else:
+            if grade != Game.GradeChoices.NA:
+                self.add_error("grade", "未クリア時は評価を「-」にしてください。")
+        return cleaned_data
+
 
 class BootstrapFormMixin:
     def __init__(self, *args, **kwargs):
