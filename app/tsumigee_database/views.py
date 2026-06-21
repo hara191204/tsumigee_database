@@ -17,7 +17,7 @@ class GameListView(ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        qs = Game.objects.select_related("maker", "hard")
+        qs = Game.objects.select_related("maker", "hard", "play_hard")
         maker = self.request.GET.get("maker")
         hard = self.request.GET.get("hard")
         clear_statuses = self.request.GET.getlist("clear_status")

@@ -73,7 +73,9 @@
         <th class="text-center">No.</th>
         <th>タイトル</th>
         <th>メーカー</th>
-        <th>ハード</th>
+        <th>ハード <i class="fa-solid fa-circle-info text-secondary small"
+    data-bs-toggle="tooltip"
+    data-bs-title="（）内はプレイ機種"></i></th>
         <th>クリア状況</th>
         <th>評価</th>
         <th class="text-center">パッケージ所有</th>
@@ -91,7 +93,10 @@
             <a href="{% url 'tsumigee_database:game_detail' game.pk %}">{{ game.title }}</a>
           </td>
           <td>{{ game.maker }}</td>
-          <td>{{ game.hard }}</td>
+          <td>
+            {{ game.hard }}
+            {% if game.play_hard %}（{{ game.play_hard }}）{% endif %}
+          </td>
           <td>{{ game.get_clear_status_display }}</td>
           <td>{{ game.grade }}</td>
           <td class="text-center">{{ game.is_package|yesno:"✓,-" }}</td>
