@@ -44,13 +44,9 @@ services:
       - ./app:/code
     ports:
       - "8000:8000"
-    # 開発用オーバーライド: --reload でコード変更を自動検知してワーカーを再起動
-    # 本番(Dockerfile内のデフォルトCMD)では使わない設定
-    command: >
-      gunicorn tsumigee_project.wsgi:application
-      --bind 0.0.0.0:8000
-      --workers 3
-      --reload
+    # 開発用: runserver で静的ファイルも配信する
+    # 本番(Dockerfile内のデフォルトCMD)では gunicorn を使う
+    command: python manage.py runserver 0.0.0.0:8000
     depends_on:
       db:
         condition: service_healthy
