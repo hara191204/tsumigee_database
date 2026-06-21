@@ -1,45 +1,36 @@
-{% extends "base.html" %} {% block title %}メーカー一覧 | 積みゲーDB{% endblock
-%} {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <h1 class="h3">メーカー一覧</h1>
-  <a href="{% url 'tsumigee_database:maker_create' %}" class="btn btn-primary"
-    >追加</a
-  >
-</div>
-
-<table class="table table-hover">
-  <thead class="table-dark">
-    <tr>
-      <th>名前</th>
-      <th>フリガナ</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for maker in object_list %}
-    <tr>
-      <td>{{ maker.name }}</td>
-      <td>{{ maker.furigana }}</td>
-      <td class="text-end">
-        <a
-          href="{% url 'tsumigee_database:maker_update' maker.pk %}"
-          class="btn btn-outline-secondary btn-sm"
-          >編集</a
-        >
-        <a
-          href="{% url 'tsumigee_database:maker_delete' maker.pk %}"
-          class="btn btn-outline-danger btn-sm"
-          >削除</a
-        >
-      </td>
-    </tr>
-    {% empty %}
-    <tr>
-      <td colspan="3" class="text-center text-muted">
-        メーカーが登録されていません
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% endblock %}
+{% extends "base.html" %}
+{% block title %}メーカー一覧 | 積みゲーDB{% endblock title %}
+{% block content %}
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3">メーカー一覧</h1>
+    <a href="{% url 'tsumigee_database:maker_create' %}"
+       class="btn btn-primary">追加</a>
+  </div>
+  <table class="table table-hover">
+    <thead class="table-dark">
+      <tr>
+        <th>名前</th>
+        <th>フリガナ</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for maker in object_list %}
+        <tr>
+          <td>{{ maker.name }}</td>
+          <td>{{ maker.furigana }}</td>
+          <td class="text-end">
+            <a href="{% url 'tsumigee_database:maker_update' maker.pk %}"
+               class="btn btn-outline-secondary btn-sm">編集</a>
+            <a href="{% url 'tsumigee_database:maker_delete' maker.pk %}"
+               class="btn btn-outline-danger btn-sm">削除</a>
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="3" class="text-center text-muted">メーカーが登録されていません</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock content %}

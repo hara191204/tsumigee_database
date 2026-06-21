@@ -1,33 +1,30 @@
-{% extends "base.html" %} {% block title %}ゲーム{{ action }} | 積みゲーDB{%
-endblock %} {% block content %}
-<div class="mb-3">
-  <h1 class="h3">ゲーム{{ action }}</h1>
-</div>
-
-<form method="post" class="col-lg-6">
-  {% csrf_token %} {% for field in form %}
+{% extends "base.html" %}
+{% block title %}ゲーム{{ action }} | 積みゲーDB{% endblock title %}
+{% block content %}
   <div class="mb-3">
-    <label for="{{ field.id_for_label }}" class="form-label fw-semibold">
-      {{ field.label }}
-    </label>
-    <div>
-      {% if field.field.widget.input_type == "checkbox" %}
-      <div class="form-check">{{ field }}</div>
-      {% else %} {{ field }} {% endif %}
+    <h1 class="h3">ゲーム{{ action }}</h1>
+  </div>
+  <form method="post" class="col-lg-6">
+    {% csrf_token %}
+    {% for field in form %}
+      <div class="mb-3">
+        <label for="{{ field.id_for_label }}" class="form-label fw-semibold">{{ field.label }}</label>
+        <div>
+          {% if field.field.widget.input_type == "checkbox" %}
+            <div class="form-check">{{ field }}</div>
+          {% else %}
+            {{ field }}
+          {% endif %}
+        </div>
+        {% if field.errors %}
+          <div class="text-danger small mt-1">{{ field.errors }}</div>
+        {% endif %}
+      </div>
+    {% endfor %}
+    <div class="d-flex gap-2 mt-4">
+      <button type="submit" class="btn btn-primary">保存</button>
+      <a href="{% if object %}{% url 'tsumigee_database:game_detail' object.pk %}{% else %}{% url 'tsumigee_database:game_list' %}{% endif %}"
+         class="btn btn-secondary">キャンセル</a>
     </div>
-    {% if field.errors %}
-    <div class="text-danger small mt-1">{{ field.errors }}</div>
-    {% endif %}
-  </div>
-  {% endfor %}
-
-  <div class="d-flex gap-2 mt-4">
-    <button type="submit" class="btn btn-primary">保存</button>
-    <a
-      href="{% if object %}{% url 'tsumigee_database:game_detail' object.pk %}{% else %}{% url 'tsumigee_database:game_list' %}{% endif %}"
-      class="btn btn-secondary"
-      >キャンセル</a
-    >
-  </div>
-</form>
-{% endblock %}
+  </form>
+{% endblock content %}
