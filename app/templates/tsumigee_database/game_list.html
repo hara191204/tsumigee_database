@@ -114,7 +114,7 @@
     <thead class="table-dark">
       {% with bp=base_params %}
         <tr>
-          <th class="text-center">No.</th>
+          <th class="text-center" style="width: 4rem">No.</th>
           <th>
             <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'furigana' and sort_order == 'asc' %}-{% endif %}furigana"
                class="text-white text-decoration-none">
