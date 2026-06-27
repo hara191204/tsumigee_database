@@ -143,7 +143,10 @@ DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,<サーバーのLAN IPアドレス>
 
 ```bash
 docker compose -f docker-compose.prod.yml up -d --build
+docker compose -f docker-compose.prod.yml restart nginx
 ```
+
+`web` コンテナ再作成後に nginx が古い IP を掴み続けるのを防ぐため、nginx を再起動する。
 
 ブラウザで `http://<サーバーのIPアドレス>` にアクセス（ポート 80）。
 
