@@ -23,6 +23,7 @@ class Maker(models.Model):
         verbose_name="フリガナ",
         max_length=255,
         validators=[FURIGANA_VALIDATOR],
+        db_index=True,
     )
 
     is_bishojo_brand = models.BooleanField(
@@ -106,6 +107,7 @@ class Game(models.Model):
         verbose_name="フリガナ",
         max_length=255,
         validators=[FURIGANA_VALIDATOR],
+        db_index=True,
     )
 
     maker = models.ForeignKey(
@@ -139,6 +141,7 @@ class Game(models.Model):
         max_length=15,
         choices=ClearStatusChoices.choices,
         default=ClearStatusChoices.TSUMI,
+        db_index=True,
     )
 
     grade = models.CharField(
@@ -146,6 +149,7 @@ class Game(models.Model):
         max_length=4,
         choices=GradeChoices.choices,
         default=GradeChoices.NA,
+        db_index=True,
     )
 
     is_package = models.BooleanField(
