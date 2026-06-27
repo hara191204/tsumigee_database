@@ -22,11 +22,27 @@
       </tr>
       <tr>
         <th class="table-secondary">クリア状況</th>
-        <td>{{ game.get_clear_status_display }}</td>
+        <td>
+          {% if game.clear_status == 'clear' %}
+            <span class="badge text-bg-success">{{ game.get_clear_status_display }}</span>
+          {% elif game.clear_status == 'tsumi' %}
+            <span class="badge text-bg-danger">{{ game.get_clear_status_display }}</span>
+          {% else %}
+            <span class="badge text-bg-secondary">{{ game.get_clear_status_display }}</span>
+          {% endif %}
+        </td>
       </tr>
       <tr>
         <th class="table-secondary">評価</th>
-        <td>{{ game.grade }}</td>
+        <td>
+          {% if game.grade == 'S+' %}
+            <span class="badge text-bg-warning">{{ game.grade }}</span>
+          {% elif game.grade != '-' %}
+            <span class="badge border border-secondary text-dark">{{ game.grade }}</span>
+          {% else %}
+            {{ game.grade }}
+          {% endif %}
+        </td>
       </tr>
       <tr>
         <th class="table-secondary">パッケージ所有</th>
