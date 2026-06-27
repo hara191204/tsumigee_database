@@ -52,6 +52,8 @@ tsumigee_database/
 │       └── wsgi.py
 ├── nginx/
 │   └── nginx.conf                    # Nginx 設定（本番用）
+├── scripts/
+│   └── backup.sh                     # DB バックアップスクリプト
 ├── Dockerfile
 ├── entrypoint.sh                     # 起動前に collectstatic を実行
 ├── docker-compose.yml                # 開発用
@@ -168,6 +170,40 @@ docker compose exec web python manage.py shell
 
 # システムチェック
 docker compose exec web python manage.py check
+```
+
+## バックアップ
+
+`scripts/backup.sh` を実行すると、SQL ダンプと CSV を `/home/hara/backups/` に保存する。
+30日より古いバックアップは自動削除される。
+
+### 出力ファイル
+
+```text
+/home/hara/backups/
+├── tsumigee_YYYYMMDD_HHMMSS.sql      # mysqldump（完全バックアップ・復元用）
+└── csv_YYYYMMDD_HHMMSS/
+    ├── tsumigee_database_game.csv
+    ├── tsumigee_database_maker.csv
+    └── tsumigee_database_hard.csv
+```
+
+### 手動実行
+
+```bash
+scripts/backup.sh
+```
+
+### cron による自動実行（毎日午前3時）
+
+```bash
+crontab -e
+```
+
+以下を追加：
+
+```text
+0 3 * * * /home/hara/Documents/tsumigee_database/scripts/backup.sh >> /home/hara/backups/backup.log 2>&1
 ```
 
 ## コミットルール
