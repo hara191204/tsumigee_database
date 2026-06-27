@@ -30,11 +30,23 @@
       </tr>
       <tr>
         <th class="table-secondary">パッケージ所有</th>
-        <td>{{ game.is_package|yesno:"あり,なし" }}</td>
+        <td>
+          {% if game.is_package %}
+            <i class="fa-solid fa-check"></i>
+          {% else %}
+            -
+          {% endif %}
+        </td>
       </tr>
       <tr>
         <th class="table-secondary">美少女ゲーム</th>
-        <td>{{ game.is_bishojo|yesno:"あり,なし" }}</td>
+        <td>
+          {% if game.is_bishojo %}
+            <i class="fa-solid fa-check"></i>
+          {% else %}
+            -
+          {% endif %}
+        </td>
       </tr>
       <tr>
         <th class="table-secondary">クリア日</th>
