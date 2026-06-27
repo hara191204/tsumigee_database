@@ -9,12 +9,14 @@
   <p class="text-muted small mb-2">全 {{ object_list|length }} 件</p>
   <table class="table table-hover">
     <thead class="table-dark">
-      <tr>
-        <th class="text-center" style="width: 4rem">No.</th>
-        <th>名前</th>
-        <th class="text-center">美少女ブランド</th>
-        <th class="text-center">追加日</th>
-      </tr>
+      {% with bp=base_params %}
+        <tr>
+          <th class="text-center" style="width: 4rem">No.</th>
+          {% include "tsumigee_database/_sort_th.html" with field="name" label="名前" %}
+          {% include "tsumigee_database/_sort_th.html" with field="is_bishojo_brand" label="美少女ブランド" th_class="text-center" %}
+          {% include "tsumigee_database/_sort_th.html" with field="created_at" label="追加日" th_class="text-center" %}
+        </tr>
+      {% endwith %}
     </thead>
     <tbody>
       {% for maker in object_list %}

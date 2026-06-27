@@ -184,9 +184,33 @@ class MakerDetailView(LoginRequiredMixin, DetailView):
     template_name = "tsumigee_database/maker_detail.html"
 
 
+_MAKER_VALID_SORT_FIELDS = {"name", "furigana", "is_bishojo_brand", "created_at"}
+
+
 class MakerListView(LoginRequiredMixin, ListView):
     model = Maker
     template_name = "tsumigee_database/maker_list.html"
+
+    def _get_sort(self):
+        sort = self.request.GET.get("sort", "furigana")
+        if sort.lstrip("-") not in _MAKER_VALID_SORT_FIELDS:
+            return "furigana"
+        return sort
+
+    def get_queryset(self):
+        sort = self._get_sort()
+        order = [sort]
+        if sort.lstrip("-") != "furigana":
+            order.append("furigana")
+        return Maker.objects.order_by(*order)
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        sort = self._get_sort()
+        ctx["sort_field"] = sort.lstrip("-")
+        ctx["sort_order"] = "desc" if sort.startswith("-") else "asc"
+        ctx["base_params"] = ""
+        return ctx
 
 
 class MakerCreateView(ActionMixin, CreateView):
