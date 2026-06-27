@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, Q
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (
@@ -25,14 +26,14 @@ _VALID_SORT_FIELDS = {
 }
 
 
-class ActionMixin:
+class ActionMixin(LoginRequiredMixin):
     action = ""
 
     def get_context_data(self, **kwargs):
         return super().get_context_data(**kwargs) | {"action": self.action}
 
 
-class GameListView(ListView):
+class GameListView(LoginRequiredMixin, ListView):
     model = Game
     template_name = "tsumigee_database/game_list.html"
     paginate_by = 500
@@ -142,7 +143,7 @@ class GameListView(ListView):
         return ctx
 
 
-class GameDetailView(DetailView):
+class GameDetailView(LoginRequiredMixin, DetailView):
     model = Game
     template_name = "tsumigee_database/game_detail.html"
 
@@ -166,7 +167,7 @@ class GameUpdateView(ActionMixin, UpdateView):
         return f"{url}?{params}" if params else url
 
 
-class GameDeleteView(DeleteView):
+class GameDeleteView(LoginRequiredMixin, DeleteView):
     model = Game
 
     def get_success_url(self):
@@ -178,12 +179,12 @@ class GameDeleteView(DeleteView):
 # --- Maker ---
 
 
-class MakerDetailView(DetailView):
+class MakerDetailView(LoginRequiredMixin, DetailView):
     model = Maker
     template_name = "tsumigee_database/maker_detail.html"
 
 
-class MakerListView(ListView):
+class MakerListView(LoginRequiredMixin, ListView):
     model = Maker
     template_name = "tsumigee_database/maker_list.html"
 
@@ -204,7 +205,7 @@ class MakerUpdateView(ActionMixin, UpdateView):
     action = "編集"
 
 
-class MakerDeleteView(DeleteView):
+class MakerDeleteView(LoginRequiredMixin, DeleteView):
     model = Maker
     success_url = reverse_lazy("tsumigee_database:maker_list")
 
@@ -212,12 +213,12 @@ class MakerDeleteView(DeleteView):
 # --- Hard ---
 
 
-class HardDetailView(DetailView):
+class HardDetailView(LoginRequiredMixin, DetailView):
     model = Hard
     template_name = "tsumigee_database/hard_detail.html"
 
 
-class HardListView(ListView):
+class HardListView(LoginRequiredMixin, ListView):
     model = Hard
     template_name = "tsumigee_database/hard_list.html"
 
@@ -238,6 +239,6 @@ class HardUpdateView(ActionMixin, UpdateView):
     action = "編集"
 
 
-class HardDeleteView(DeleteView):
+class HardDeleteView(LoginRequiredMixin, DeleteView):
     model = Hard
     success_url = reverse_lazy("tsumigee_database:hard_list")
