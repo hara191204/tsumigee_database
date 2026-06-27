@@ -164,7 +164,6 @@ class GameUpdateView(ActionMixin, UpdateView):
 
 class GameDeleteView(DeleteView):
     model = Game
-    template_name = "tsumigee_database/game_confirm_delete.html"
 
     def get_success_url(self):
         params = self.request.session.get("game_list_params", "")
@@ -203,7 +202,6 @@ class MakerUpdateView(ActionMixin, UpdateView):
 
 class MakerDeleteView(DeleteView):
     model = Maker
-    template_name = "tsumigee_database/maker_confirm_delete.html"
     success_url = reverse_lazy("tsumigee_database:maker_list")
 
 
@@ -238,5 +236,4 @@ class HardUpdateView(ActionMixin, UpdateView):
 
 class HardDeleteView(DeleteView):
     model = Hard
-    template_name = "tsumigee_database/hard_confirm_delete.html"
     success_url = reverse_lazy("tsumigee_database:hard_list")
