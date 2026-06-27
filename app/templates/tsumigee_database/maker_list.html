@@ -21,7 +21,6 @@
       <tr>
         <th class="text-center" style="width: 4rem">No.</th>
         <th>名前</th>
-        <th>フリガナ</th>
         <th class="text-center">美少女ブランド</th>
       </tr>
     </thead>
@@ -30,7 +29,6 @@
         <tr>
           <td class="text-center text-muted">{{ forloop.counter }}</td>
           <td><a href="{% url 'tsumigee_database:maker_detail' maker.pk %}">{{ maker.name }}</a></td>
-          <td>{{ maker.furigana }}</td>
           <td class="text-center">
             {% if maker.is_bishojo_brand %}
               <i class="fa-solid fa-check"></i>
@@ -41,7 +39,7 @@
         </tr>
       {% empty %}
         <tr>
-          <td colspan="4" class="text-center py-5 text-muted">
+          <td colspan="3" class="text-center py-5 text-muted">
             <i class="fa-solid fa-building fa-2x opacity-50 mb-2 d-block"></i>
             メーカーが登録されていません
           </td>
