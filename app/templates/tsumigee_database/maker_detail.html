@@ -14,7 +14,13 @@
       </tr>
       <tr>
         <th class="table-secondary">美少女ゲームブランド</th>
-        <td>{{ object.is_bishojo_brand|yesno:"あり,なし" }}</td>
+        <td>
+          {% if object.is_bishojo_brand %}
+            <i class="fa-solid fa-check"></i>
+          {% else %}
+            -
+          {% endif %}
+        </td>
       </tr>
       <tr>
         <th class="table-secondary">登録日時</th>
