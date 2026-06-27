@@ -1,5 +1,20 @@
 {% extends "base.html" %}
 {% block page_title %}ゲーム一覧 | {% endblock page_title %}
+{% block extra_styles %}
+  <style>
+    #filterAccordion .accordion-button:not(.collapsed) {
+      background-color: #212529;
+      color: #fff;
+      box-shadow: none;
+    }
+    #filterAccordion .accordion-button:not(.collapsed)::after {
+      filter: invert(1);
+    }
+    #filterAccordion .accordion-button:focus {
+      box-shadow: none;
+    }
+  </style>
+{% endblock extra_styles %}
 {% block navbar_actions %}
   <a href="{% url 'tsumigee_database:game_create' %}"
      class="btn btn-outline-light btn-sm">Add</a>
