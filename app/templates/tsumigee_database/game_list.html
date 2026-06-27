@@ -119,23 +119,71 @@
                 </div>
                 <div>
                   <label class="form-label small fw-semibold mb-1">パッケージ所有</label>
-                  <select name="is_package" class="form-select form-select-sm">
-                    <option value="" {% if selected_is_package == "" %}selected{% endif %}>すべて</option>
-                    <option value="true"
-                            {% if selected_is_package == "true" %}selected{% endif %}>✓ あり</option>
-                    <option value="false"
-                            {% if selected_is_package == "false" %}selected{% endif %}>- なし</option>
-                  </select>
+                  <div class="d-flex gap-3">
+                    <div class="form-check">
+                      <input class="form-check-input"
+                             type="radio"
+                             name="is_package"
+                             id="pkg_all"
+                             value=""
+                             {% if selected_is_package == "" %}checked{% endif %} />
+                      <label class="form-check-label small" for="pkg_all">すべて</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input"
+                             type="radio"
+                             name="is_package"
+                             id="pkg_true"
+                             value="true"
+                             {% if selected_is_package == "true" %}checked{% endif %} />
+                      <label class="form-check-label small" for="pkg_true">
+                        <i class="fa-solid fa-check"></i>
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input"
+                             type="radio"
+                             name="is_package"
+                             id="pkg_false"
+                             value="false"
+                             {% if selected_is_package == "false" %}checked{% endif %} />
+                      <label class="form-check-label small" for="pkg_false">-</label>
+                    </div>
+                  </div>
                 </div>
                 <div>
                   <label class="form-label small fw-semibold mb-1">美少女ゲーム</label>
-                  <select name="is_bishojo" class="form-select form-select-sm">
-                    <option value="" {% if selected_is_bishojo == "" %}selected{% endif %}>すべて</option>
-                    <option value="true"
-                            {% if selected_is_bishojo == "true" %}selected{% endif %}>✓ あり</option>
-                    <option value="false"
-                            {% if selected_is_bishojo == "false" %}selected{% endif %}>- なし</option>
-                  </select>
+                  <div class="d-flex gap-3">
+                    <div class="form-check">
+                      <input class="form-check-input"
+                             type="radio"
+                             name="is_bishojo"
+                             id="bsj_all"
+                             value=""
+                             {% if selected_is_bishojo == "" %}checked{% endif %} />
+                      <label class="form-check-label small" for="bsj_all">すべて</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input"
+                             type="radio"
+                             name="is_bishojo"
+                             id="bsj_true"
+                             value="true"
+                             {% if selected_is_bishojo == "true" %}checked{% endif %} />
+                      <label class="form-check-label small" for="bsj_true">
+                        <i class="fa-solid fa-check"></i>
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input"
+                             type="radio"
+                             name="is_bishojo"
+                             id="bsj_false"
+                             value="false"
+                             {% if selected_is_bishojo == "false" %}checked{% endif %} />
+                      <label class="form-check-label small" for="bsj_false">-</label>
+                    </div>
+                  </div>
                 </div>
                 <div class="d-flex gap-1">
                   <button type="submit" class="btn btn-outline-primary btn-sm">Filter</button>
