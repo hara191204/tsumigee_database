@@ -16,6 +16,7 @@ class Maker(models.Model):
     name = models.CharField(
         verbose_name="名前",
         max_length=255,
+        unique=True,
     )
 
     furigana = models.CharField(
@@ -56,6 +57,7 @@ class Hard(models.Model):
     name = models.CharField(
         verbose_name="名前",
         max_length=32,
+        unique=True,
     )
 
     created_at = models.DateTimeField(
