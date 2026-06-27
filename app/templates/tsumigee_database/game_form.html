@@ -23,5 +23,30 @@
         clearedAt.value = ''
       }
     })
+
+    // プレイ可能ハード：未設定時はデフォルトでロック
+    const playHard = document.getElementById('id_play_hard')
+    const form = playHard.closest('form')
+    if (!playHard.value) playHard.disabled = true
+
+    const toggleBtn = document.createElement('button')
+    toggleBtn.type = 'button'
+    toggleBtn.className = 'btn btn-sm btn-outline-secondary mt-1'
+    const updateBtn = () => {
+      toggleBtn.innerHTML = playHard.disabled
+        ? '<i class="fa-solid fa-lock fa-xs"></i> 変更する'
+        : '<i class="fa-solid fa-lock-open fa-xs"></i> ロックする'
+    }
+    updateBtn()
+    playHard.insertAdjacentElement('afterend', toggleBtn)
+
+    toggleBtn.addEventListener('click', () => {
+      playHard.disabled = !playHard.disabled
+      if (playHard.disabled) playHard.value = ''
+      updateBtn()
+    })
+
+    // disabled のままだと値が送信されないため送信直前に解除
+    form.addEventListener('submit', () => { playHard.disabled = false })
   </script>
 {% endblock scripts %}
