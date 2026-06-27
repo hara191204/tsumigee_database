@@ -2,6 +2,15 @@
 
 自分が所持しているゲームソフトをデータベースで管理する Web アプリ。
 
+## 機能
+
+- ゲームの登録・編集・削除
+- クリア状況（クリア / 積み / 収集のみ）・評価・クリア日の管理
+- メーカー・ハードのマスタ管理
+- フィルター（メーカー、ハード、クリア状況、評価、パッケージ所有、美少女ゲーム）と並び替え
+- 積み率・クリア数のドーナツグラフ表示
+- 全モデルへの変更履歴の記録
+
 ## 技術スタック
 
 | カテゴリ | 技術 |
@@ -11,7 +20,8 @@
 | バックエンド | Django 6.0.6 (Python 3.12) |
 | データベース | MySQL 8.4 |
 | Web サーバー | Gunicorn |
-| リンター / フォーマッター | Ruff |
+| フロントエンド | Bootstrap 5.3.3 / FontAwesome 6.7.2 / Chart.js 4.4.7 |
+| リンター / フォーマッター | Ruff / djLint |
 | git hook 管理 | pre-commit |
 | コミットルール | Conventional Commits + Commitlint |
 | 開発フロー | GitHub Flow |
@@ -20,22 +30,29 @@
 
 ```text
 tsumigee_database/
-├── app/                         # Django プロジェクト
+├── app/                              # Django プロジェクト
 │   ├── manage.py
-│   └── tsumigee_project/
+│   ├── templates/                    # HTML テンプレート
+│   │   ├── base.html
+│   │   └── tsumigee_database/
+│   ├── tsumigee_database/            # メインアプリ
+│   │   ├── migrations/
+│   │   ├── models.py
+│   │   ├── views.py
+│   │   ├── forms.py
+│   │   ├── urls.py
+│   │   └── admin.py
+│   └── tsumigee_project/             # Django 設定
 │       ├── settings.py
 │       ├── urls.py
-│       ├── wsgi.py
-│       └── asgi.py
-├── .vscode/
-│   └── settings.json            # VSCode 設定（venv 自動有効化）
-├── Dockerfile                   # Django コンテナ定義
-├── docker-compose.yml           # サービス構成定義
-├── requirements.txt             # Python 依存パッケージ
-├── .env.example                 # 環境変数テンプレート
-├── .pre-commit-config.yaml      # pre-commit フック設定
-├── commitlint.config.js         # コミットメッセージルール
-└── package.json                 # Node.js 依存パッケージ（commitlint 用）
+│       └── wsgi.py
+├── Dockerfile
+├── docker-compose.yml
+├── requirements.txt
+├── .env.example                      # 環境変数テンプレート
+├── .pre-commit-config.yaml           # pre-commit フック設定
+├── commitlint.config.js              # コミットメッセージルール
+└── package.json                      # Node.js 依存パッケージ（commitlint 用）
 ```
 
 ## 開発環境のセットアップ
@@ -98,6 +115,23 @@ docker compose up
 
 ブラウザで `http://<RaspberryPiのIPアドレス>:8000` にアクセスして確認。
 
+## よく使うコマンド
+
+```bash
+# コンテナ起動
+docker compose up
+
+# マイグレーション作成・適用
+docker compose exec web python manage.py makemigrations
+docker compose exec web python manage.py migrate
+
+# Django シェル
+docker compose exec web python manage.py shell
+
+# システムチェック
+docker compose exec web python manage.py check
+```
+
 ## コミットルール
 
 [Conventional Commits](https://www.conventionalcommits.org/) に従う。コミットメッセージは英語で記述する。
@@ -116,7 +150,7 @@ docker compose up
 | `test` | テスト追加・修正 |
 | `style` | コードスタイル修正（動作に影響なし） |
 
-コミット時に pre-commit が ruff（コード品質）と commitlint（メッセージ形式）を自動で検証する。
+コミット時に pre-commit が ruff・djlint（コード品質）と commitlint（メッセージ形式）を自動で検証する。
 
 ## 開発フロー
 
