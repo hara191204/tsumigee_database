@@ -338,6 +338,8 @@
           <td class="text-center">
             {% if game.grade == 'S+' %}
               <span class="badge text-bg-warning">{{ game.grade }}</span>
+            {% elif game.grade != '-' %}
+              <span class="badge border border-secondary text-dark">{{ game.grade }}</span>
             {% else %}
               {{ game.grade }}
             {% endif %}
