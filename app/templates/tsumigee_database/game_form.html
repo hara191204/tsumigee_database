@@ -12,3 +12,16 @@
     </div>
   </form>
 {% endblock content %}
+{% block scripts %}
+  <script>
+    const clearStatus = document.getElementById('id_clear_status')
+    const clearedAt = document.getElementById('id_cleared_at')
+    clearStatus.addEventListener('change', () => {
+      if (clearStatus.value === 'clear') {
+        if (!clearedAt.value) clearedAt.value = new Date().toISOString().slice(0, 10)
+      } else {
+        clearedAt.value = ''
+      }
+    })
+  </script>
+{% endblock scripts %}
