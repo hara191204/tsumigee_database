@@ -46,11 +46,11 @@
       </tr>
       <tr>
         <th class="table-secondary">登録日時</th>
-        <td>{{ game.created_at }}</td>
+        <td>{{ game.created_at|date:"Y/m/d H:i" }}</td>
       </tr>
       <tr>
         <th class="table-secondary">更新日時</th>
-        <td>{{ game.updated_at }}</td>
+        <td>{{ game.updated_at|date:"Y/m/d H:i" }}</td>
       </tr>
     </tbody>
   </table>

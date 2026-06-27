@@ -10,11 +10,11 @@
       </tr>
       <tr>
         <th class="table-secondary">登録日時</th>
-        <td>{{ object.created_at }}</td>
+        <td>{{ object.created_at|date:"Y/m/d H:i" }}</td>
       </tr>
       <tr>
         <th class="table-secondary">更新日時</th>
-        <td>{{ object.updated_at }}</td>
+        <td>{{ object.updated_at|date:"Y/m/d H:i" }}</td>
       </tr>
     </tbody>
   </table>
