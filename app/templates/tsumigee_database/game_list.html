@@ -44,8 +44,8 @@
              data-bs-parent="#filterAccordion">
           <div class="accordion-body">
             <form method="get">
-              <div class="row g-2 align-items-end">
-                <div class="col-auto">
+              <div class="d-flex flex-column gap-3">
+                <div>
                   <label class="form-label small fw-semibold mb-1">メーカー</label>
                   <select name="maker" class="form-select form-select-sm">
                     <option value="">すべて</option>
@@ -55,7 +55,7 @@
                     {% endfor %}
                   </select>
                 </div>
-                <div class="col-auto">
+                <div>
                   <label class="form-label small fw-semibold mb-1">ハード</label>
                   <select name="hard" class="form-select form-select-sm">
                     <option value="">すべて</option>
@@ -65,7 +65,7 @@
                     {% endfor %}
                   </select>
                 </div>
-                <div class="col-auto">
+                <div>
                   <label class="form-label small fw-semibold mb-1">クリア状況</label>
                   <div class="d-flex gap-3">
                     {% for value, label in clear_status_choices %}
@@ -81,7 +81,7 @@
                     {% endfor %}
                   </div>
                 </div>
-                <div class="col-auto">
+                <div>
                   <label class="form-label small fw-semibold mb-1">評価</label>
                   <div class="d-flex gap-3">
                     {% for value, label in grade_choices %}
@@ -97,7 +97,7 @@
                     {% endfor %}
                   </div>
                 </div>
-                <div class="col-auto">
+                <div>
                   <label class="form-label small fw-semibold mb-1">パッケージ所有</label>
                   <select name="is_package" class="form-select form-select-sm">
                     <option value="" {% if selected_is_package == "" %}selected{% endif %}>すべて</option>
@@ -107,7 +107,7 @@
                             {% if selected_is_package == "false" %}selected{% endif %}>- なし</option>
                   </select>
                 </div>
-                <div class="col-auto">
+                <div>
                   <label class="form-label small fw-semibold mb-1">美少女ゲーム</label>
                   <select name="is_bishojo" class="form-select form-select-sm">
                     <option value="" {% if selected_is_bishojo == "" %}selected{% endif %}>すべて</option>
@@ -117,7 +117,7 @@
                             {% if selected_is_bishojo == "false" %}selected{% endif %}>- なし</option>
                   </select>
                 </div>
-                <div class="col-auto d-flex gap-1">
+                <div class="d-flex gap-1">
                   <button type="submit" class="btn btn-outline-primary btn-sm">Filter</button>
                   <a href="{% url 'tsumigee_database:game_list' %}"
                      class="btn btn-outline-secondary btn-sm">Clear</a>
