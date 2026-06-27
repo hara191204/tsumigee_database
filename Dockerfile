@@ -30,12 +30,11 @@ RUN useradd --create-home --shell /bin/bash appuser
 
 # アプリ本体のコピー
 COPY --chown=appuser:appuser ./app /code
+COPY --chown=appuser:appuser entrypoint.sh /entrypoint.sh
 
 USER appuser
 
 EXPOSE 8000
 
-# 本番用のデフォルト起動コマンド（--reloadなし）
-# 開発時は docker-compose.yml 側の command で上書きして --reload を付与する
-# プロジェクト名は "tsumigee_project" としている
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["gunicorn", "tsumigee_project.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]
