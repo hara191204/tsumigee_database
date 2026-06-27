@@ -1,5 +1,5 @@
 from django.db.models import Count, Q
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.views.generic import (
     CreateView,
     DeleteView,
@@ -36,6 +36,10 @@ class GameListView(ListView):
     model = Game
     template_name = "tsumigee_database/game_list.html"
     paginate_by = 500
+
+    def get(self, request, *args, **kwargs):
+        request.session["game_list_params"] = request.GET.urlencode()
+        return super().get(request, *args, **kwargs)
 
     def _get_sort(self):
         sort = self.request.GET.get("sort", "furigana")
@@ -152,11 +156,20 @@ class GameUpdateView(ActionMixin, UpdateView):
     template_name = "tsumigee_database/game_form.html"
     action = "編集"
 
+    def get_success_url(self):
+        params = self.request.session.get("game_list_params", "")
+        url = reverse("tsumigee_database:game_list")
+        return f"{url}?{params}" if params else url
+
 
 class GameDeleteView(DeleteView):
     model = Game
     template_name = "tsumigee_database/game_confirm_delete.html"
-    success_url = reverse_lazy("tsumigee_database:game_list")
+
+    def get_success_url(self):
+        params = self.request.session.get("game_list_params", "")
+        url = reverse("tsumigee_database:game_list")
+        return f"{url}?{params}" if params else url
 
 
 # --- Maker ---
