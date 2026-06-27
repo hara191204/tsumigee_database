@@ -65,6 +65,22 @@ class GameListView(ListView):
             qs = qs.filter(is_bishojo=is_bishojo == "true")
         return qs
 
+    def _get_page_range(self, page_obj):
+        current = page_obj.number
+        total = page_obj.paginator.num_pages
+        delta = 2
+        edges = {1, 2, total - 1, total}
+        window = set(range(max(1, current - delta), min(total, current + delta) + 1))
+        pages = sorted(p for p in (edges | window) if 1 <= p <= total)
+        result = []
+        prev = None
+        for p in pages:
+            if prev is not None and p - prev > 1:
+                result.append(None)
+            result.append(p)
+            prev = p
+        return result
+
     def get_queryset(self):
         return self._get_filtered_qs().order_by(self._get_sort())
 
@@ -90,6 +106,18 @@ class GameListView(ListView):
         base_params.pop("page", None)
         base_params.pop("sort", None)
         ctx["base_params"] = base_params.urlencode()
+        ctx["filter_count"] = sum(
+            [
+                1 if self.request.GET.get("maker") else 0,
+                1 if self.request.GET.get("hard") else 0,
+                len(self.request.GET.getlist("clear_status")),
+                len(self.request.GET.getlist("grade")),
+                1 if self.request.GET.get("is_package") else 0,
+                1 if self.request.GET.get("is_bishojo") else 0,
+            ]
+        )
+        if ctx.get("is_paginated"):
+            ctx["page_range"] = self._get_page_range(ctx["page_obj"])
         agg = self._get_filtered_qs().aggregate(
             total=Count("id"),
             clear=Count("id", filter=Q(clear_status=Game.ClearStatusChoices.CLEAR)),

@@ -52,7 +52,12 @@
                   data-bs-toggle="collapse"
                   data-bs-target="#filterCollapse"
                   aria-expanded="{% if is_filtered %}true{% else %}false{% endif %}"
-                  aria-controls="filterCollapse">Filter</button>
+                  aria-controls="filterCollapse">
+            Filter
+            {% if filter_count %}
+              <span class="badge text-bg-primary rounded-pill ms-2">{{ filter_count }}</span>
+            {% endif %}
+          </button>
         </h2>
         <div id="filterCollapse"
              class="accordion-collapse collapse {% if is_filtered %}show{% endif %}"
@@ -277,8 +282,28 @@
             {{ game.hard }}
             {% if game.play_hard %}（{{ game.play_hard }}）{% endif %}
           </td>
-          <td class="text-center">{{ game.get_clear_status_display }}</td>
-          <td class="text-center">{{ game.grade }}</td>
+          <td class="text-center">
+            {% if game.clear_status == 'clear' %}
+              <span class="badge text-bg-success">{{ game.get_clear_status_display }}</span>
+            {% elif game.clear_status == 'tsumi' %}
+              <span class="badge text-bg-danger">{{ game.get_clear_status_display }}</span>
+            {% else %}
+              <span class="badge text-bg-secondary">{{ game.get_clear_status_display }}</span>
+            {% endif %}
+          </td>
+          <td class="text-center">
+            {% if game.grade == 'S+' or game.grade == 'S' %}
+              <span class="badge text-bg-warning">{{ game.grade }}</span>
+            {% elif game.grade == 'A' %}
+              <span class="badge text-bg-success">{{ game.grade }}</span>
+            {% elif game.grade == 'B' %}
+              <span class="badge text-bg-primary">{{ game.grade }}</span>
+            {% elif game.grade == 'C' %}
+              <span class="badge text-bg-secondary">{{ game.grade }}</span>
+            {% else %}
+              {{ game.grade }}
+            {% endif %}
+          </td>
           <td class="text-center">
             {% if game.is_package %}
               <i class="fa-solid fa-check"></i>
@@ -317,11 +342,17 @@
             <span class="page-link">Prev</span>
           </li>
         {% endif %}
-        {% for num in page_obj.paginator.page_range %}
-          <li class="page-item {% if page_obj.number == num %}active{% endif %}">
-            <a class="page-link"
-               href="?{% if filter_params %}{{ filter_params }}&{% endif %}page={{ num }}">{{ num }}</a>
-          </li>
+        {% for num in page_range %}
+          {% if not num %}
+            <li class="page-item disabled">
+              <span class="page-link">…</span>
+            </li>
+          {% else %}
+            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+              <a class="page-link"
+                 href="?{% if filter_params %}{{ filter_params }}&{% endif %}page={{ num }}">{{ num }}</a>
+            </li>
+          {% endif %}
         {% endfor %}
         {% if page_obj.has_next %}
           <li class="page-item">
