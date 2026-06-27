@@ -6,10 +6,12 @@
 
 - ゲームの登録・編集・削除
 - クリア状況（クリア / 積み / 収集のみ）・評価・クリア日の管理
+- クリア状況変更時のクリア日自動入力（JS + サーバー側バリデーション）
 - メーカー・ハードのマスタ管理
 - フィルター（メーカー、ハード、クリア状況、評価、パッケージ所有、美少女ゲーム）と並び替え
 - 積み率・クリア数のドーナツグラフ表示
 - 全モデルへの変更履歴の記録
+- ログイン認証（全ページ LoginRequired）
 
 ## 技術スタック
 
@@ -19,7 +21,7 @@
 | コンテナ | Docker / Docker Compose |
 | バックエンド | Django 6.0.6 (Python 3.12) |
 | データベース | MySQL 8.4 |
-| Web サーバー | Gunicorn |
+| Web サーバー | Nginx (リバースプロキシ / 静的ファイル配信) + Gunicorn (WSGI) |
 | フロントエンド | Bootstrap 5.3.3 / FontAwesome 6.7.2 / Chart.js 4.4.7 |
 | リンター / フォーマッター | Ruff / djLint |
 | git hook 管理 | pre-commit |
@@ -34,6 +36,8 @@ tsumigee_database/
 │   ├── manage.py
 │   ├── templates/                    # HTML テンプレート
 │   │   ├── base.html
+│   │   ├── registration/
+│   │   │   └── login.html
 │   │   └── tsumigee_database/
 │   ├── tsumigee_database/            # メインアプリ
 │   │   ├── migrations/
@@ -46,8 +50,12 @@ tsumigee_database/
 │       ├── settings.py
 │       ├── urls.py
 │       └── wsgi.py
+├── nginx/
+│   └── nginx.conf                    # Nginx 設定（本番用）
 ├── Dockerfile
-├── docker-compose.yml
+├── entrypoint.sh                     # 起動前に collectstatic を実行
+├── docker-compose.yml                # 開発用
+├── docker-compose.prod.yml           # 本番用（Nginx + Gunicorn）
 ├── requirements.txt
 ├── .env.example                      # 環境変数テンプレート
 ├── .pre-commit-config.yaml           # pre-commit フック設定
@@ -106,19 +114,49 @@ pre-commit install --hook-type commit-msg
 npm install
 ```
 
-#### 6. Docker イメージをビルドして起動
+#### 6. Docker イメージをビルドして起動（開発）
 
 ```bash
-docker compose build
 docker compose up
 ```
 
-ブラウザで `http://<RaspberryPiのIPアドレス>:8000` にアクセスして確認。
+ブラウザで `http://localhost:8000` にアクセスして確認。
+
+#### 7. スーパーユーザーを作成
+
+```bash
+docker compose exec web python manage.py createsuperuser
+```
+
+## 本番環境での起動
+
+### 1. `.env` を本番用に更新
+
+```env
+DJANGO_DEBUG=False
+DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,<サーバーのLAN IPアドレス>
+```
+
+### 2. 起動
+
+```bash
+docker compose -f docker-compose.prod.yml up -d --build
+```
+
+ブラウザで `http://<サーバーのIPアドレス>` にアクセス（ポート 80）。
+
+### 3. 自動起動の設定
+
+```bash
+sudo systemctl enable docker
+```
+
+Docker が自動起動し、`restart: unless-stopped` により各コンテナが自動で立ち上がる。
 
 ## よく使うコマンド
 
 ```bash
-# コンテナ起動
+# コンテナ起動（開発）
 docker compose up
 
 # マイグレーション作成・適用
@@ -149,6 +187,7 @@ docker compose exec web python manage.py check
 | `refactor` | リファクタリング |
 | `test` | テスト追加・修正 |
 | `style` | コードスタイル修正（動作に影響なし） |
+| `perf` | パフォーマンス改善 |
 
 コミット時に pre-commit が ruff・djlint（コード品質）と commitlint（メッセージ形式）を自動で検証する。
 
