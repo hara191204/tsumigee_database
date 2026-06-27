@@ -3,7 +3,19 @@ from django import forms
 from .models import Game, Hard, Maker
 
 
-class GameForm(forms.ModelForm):
+class BootstrapFormMixin:
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            if isinstance(field.widget, forms.CheckboxInput):
+                field.widget.attrs["class"] = "form-check-input"
+            elif isinstance(field.widget, forms.Select):
+                field.widget.attrs["class"] = "form-select"
+            else:
+                field.widget.attrs["class"] = "form-control"
+
+
+class GameForm(BootstrapFormMixin, forms.ModelForm):
     class Meta:
         model = Game
         fields = [
@@ -24,16 +36,6 @@ class GameForm(forms.ModelForm):
             "note": forms.Textarea(attrs={"rows": 4}),
         }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field in self.fields.values():
-            if isinstance(field.widget, forms.CheckboxInput):
-                field.widget.attrs["class"] = "form-check-input"
-            elif isinstance(field.widget, forms.Select):
-                field.widget.attrs["class"] = "form-select"
-            else:
-                field.widget.attrs["class"] = "form-control"
-
     def clean(self):
         cleaned_data = super().clean()
         clear_status = cleaned_data.get("clear_status")
@@ -45,18 +47,6 @@ class GameForm(forms.ModelForm):
             if grade != Game.GradeChoices.NA:
                 self.add_error("grade", "未クリア時は評価を「-」にしてください。")
         return cleaned_data
-
-
-class BootstrapFormMixin:
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field in self.fields.values():
-            if isinstance(field.widget, forms.CheckboxInput):
-                field.widget.attrs["class"] = "form-check-input"
-            elif isinstance(field.widget, forms.Select):
-                field.widget.attrs["class"] = "form-select"
-            else:
-                field.widget.attrs["class"] = "form-control"
 
 
 class MakerForm(BootstrapFormMixin, forms.ModelForm):

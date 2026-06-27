@@ -46,7 +46,7 @@
       </tr>
       <tr>
         <th class="table-secondary">クリア日</th>
-        <td>{{ game.cleared_at|default:"-" }}</td>
+        <td>{{ game.cleared_at|date:"Y/m/d"|default:"-" }}</td>
       </tr>
       <tr>
         <th class="table-secondary">備考</th>
