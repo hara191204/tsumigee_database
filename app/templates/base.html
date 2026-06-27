@@ -32,9 +32,15 @@
             <a class="nav-link" href="{% url 'tsumigee_database:hard_list' %}">ハード</a>
           </div>
         </div>
-        <div class="ms-auto">
+        <div class="ms-auto d-flex align-items-center gap-3">
           {% block navbar_actions %}
           {% endblock navbar_actions %}
+          {% if user.is_authenticated %}
+            <form method="post" action="{% url 'logout' %}" class="m-0">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-outline-light btn-sm">ログアウト</button>
+            </form>
+          {% endif %}
         </div>
       </div>
     </nav>
