@@ -86,7 +86,11 @@ class GameListView(ListView):
         return result
 
     def get_queryset(self):
-        return self._get_filtered_qs().order_by(self._get_sort())
+        sort = self._get_sort()
+        order = [sort]
+        if sort.lstrip("-") != "furigana":
+            order.append("furigana")
+        return self._get_filtered_qs().order_by(*order)
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
