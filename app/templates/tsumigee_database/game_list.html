@@ -336,14 +336,8 @@
             {% endif %}
           </td>
           <td class="text-center">
-            {% if game.grade == 'S+' or game.grade == 'S' %}
+            {% if game.grade == 'S+' %}
               <span class="badge text-bg-warning">{{ game.grade }}</span>
-            {% elif game.grade == 'A' %}
-              <span class="badge text-bg-success">{{ game.grade }}</span>
-            {% elif game.grade == 'B' %}
-              <span class="badge text-bg-primary">{{ game.grade }}</span>
-            {% elif game.grade == 'C' %}
-              <span class="badge text-bg-secondary">{{ game.grade }}</span>
             {% else %}
               {{ game.grade }}
             {% endif %}
