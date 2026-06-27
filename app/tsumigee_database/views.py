@@ -98,10 +98,10 @@ class GameListView(ListView):
                 "id", filter=Q(clear_status=Game.ClearStatusChoices.COLLECTION_ONLY)
             ),
         )
-        total = agg["total"]
+        playable = agg["clear"] + agg["tsumi"]
         ctx["stats"] = {
             **agg,
-            "tsumi_ratio": round(agg["tsumi"] / total * 100, 1) if total else 0,
+            "tsumi_ratio": round(agg["tsumi"] / playable * 100, 1) if playable else 0,
         }
         return ctx
 

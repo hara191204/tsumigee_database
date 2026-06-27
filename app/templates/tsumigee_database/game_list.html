@@ -14,8 +14,7 @@
                   width="160"
                   height="120"
                   data-clear="{{ stats.clear }}"
-                  data-tsumi="{{ stats.tsumi }}"
-                  data-collection-only="{{ stats.collection_only }}"></canvas>
+                  data-tsumi="{{ stats.tsumi }}"></canvas>
         </div>
         <div class="col">
           <div class="fs-4 fw-bold mb-1">積み率：{{ stats.tsumi_ratio }}%</div>
@@ -330,14 +329,13 @@
     new Chart(canvas, {
       type: 'doughnut',
       data: {
-        labels: ['クリア', '積み', '収集のみ'],
+        labels: ['クリア', '積み'],
         datasets: [{
           data: [
             parseInt(canvas.dataset.clear),
             parseInt(canvas.dataset.tsumi),
-            parseInt(canvas.dataset.collectionOnly),
           ],
-          backgroundColor: ['#198754', '#dc3545', '#6c757d'],
+          backgroundColor: ['#198754', '#dc3545'],
           borderWidth: 0,
         }]
       },
