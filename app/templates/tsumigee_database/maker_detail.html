@@ -14,13 +14,7 @@
       </tr>
       <tr>
         <th class="table-secondary">美少女ゲームブランド</th>
-        <td>
-          {% if object.is_bishojo_brand %}
-            <i class="fa-solid fa-check"></i>
-          {% else %}
-            -
-          {% endif %}
-        </td>
+        <td>{% include "tsumigee_database/_bool_icon.html" with value=object.is_bishojo_brand %}</td>
       </tr>
       <tr>
         <th class="table-secondary">登録日時</th>

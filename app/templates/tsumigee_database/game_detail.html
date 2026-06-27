@@ -23,46 +23,20 @@
       <tr>
         <th class="table-secondary">クリア状況</th>
         <td>
-          {% if game.clear_status == 'clear' %}
-            <span class="badge text-bg-success">{{ game.get_clear_status_display }}</span>
-          {% elif game.clear_status == 'tsumi' %}
-            <span class="badge text-bg-danger">{{ game.get_clear_status_display }}</span>
-          {% else %}
-            <span class="badge text-bg-secondary">{{ game.get_clear_status_display }}</span>
-          {% endif %}
+          {% include "tsumigee_database/_clear_status_badge.html" with cs=game.clear_status cs_label=game.get_clear_status_display %}
         </td>
       </tr>
       <tr>
         <th class="table-secondary">評価</th>
-        <td>
-          {% if game.grade == 'S+' %}
-            <span class="badge text-bg-warning">{{ game.grade }}</span>
-          {% elif game.grade != '-' %}
-            <span class="badge border border-secondary text-dark">{{ game.grade }}</span>
-          {% else %}
-            {{ game.grade }}
-          {% endif %}
-        </td>
+        <td>{% include "tsumigee_database/_grade_badge.html" with grade=game.grade %}</td>
       </tr>
       <tr>
         <th class="table-secondary">パッケージ所有</th>
-        <td>
-          {% if game.is_package %}
-            <i class="fa-solid fa-check"></i>
-          {% else %}
-            -
-          {% endif %}
-        </td>
+        <td>{% include "tsumigee_database/_bool_icon.html" with value=game.is_package %}</td>
       </tr>
       <tr>
         <th class="table-secondary">美少女ゲーム</th>
-        <td>
-          {% if game.is_bishojo %}
-            <i class="fa-solid fa-check"></i>
-          {% else %}
-            -
-          {% endif %}
-        </td>
+        <td>{% include "tsumigee_database/_bool_icon.html" with value=game.is_bishojo %}</td>
       </tr>
       <tr>
         <th class="table-secondary">クリア日</th>

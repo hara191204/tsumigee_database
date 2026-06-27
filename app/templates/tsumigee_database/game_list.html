@@ -13,11 +13,6 @@
     #filterAccordion .accordion-button:focus {
       box-shadow: none;
     }
-    thead th {
-      position: sticky;
-      top: 0;
-      z-index: 1;
-    }
   </style>
 {% endblock extra_styles %}
 {% block navbar_actions %}
@@ -214,108 +209,15 @@
       {% with bp=base_params %}
         <tr>
           <th class="text-center" style="width: 4rem">No.</th>
-          <th>
-            <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'furigana' and sort_order == 'asc' %}-{% endif %}furigana"
-               class="text-white text-decoration-none">
-              タイトル
-              {% if sort_field == 'furigana' %}
-                <i class="fa-solid fa-sort-{{ sort_order }} ms-1"></i>
-              {% else %}
-                <i class="fa-solid fa-sort ms-1 opacity-25"></i>
-              {% endif %}
-            </a>
-          </th>
-          <th>
-            <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'maker__furigana' and sort_order == 'asc' %}-{% endif %}maker__furigana"
-               class="text-white text-decoration-none">
-              メーカー
-              {% if sort_field == 'maker__furigana' %}
-                <i class="fa-solid fa-sort-{{ sort_order }} ms-1"></i>
-              {% else %}
-                <i class="fa-solid fa-sort ms-1 opacity-25"></i>
-              {% endif %}
-            </a>
-          </th>
-          <th class="text-center">
-            <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'hard__name' and sort_order == 'asc' %}-{% endif %}hard__name"
-               class="text-white text-decoration-none">
-              ハード
-              {% if sort_field == 'hard__name' %}
-                <i class="fa-solid fa-sort-{{ sort_order }} ms-1"></i>
-              {% else %}
-                <i class="fa-solid fa-sort ms-1 opacity-25"></i>
-              {% endif %}
-            </a>
-            <i class="fa-solid fa-circle-info text-secondary small"
-               data-bs-toggle="tooltip"
-               data-bs-title="（）内はプレイ機種"></i>
-          </th>
-          <th class="text-center">
-            <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'clear_status' and sort_order == 'asc' %}-{% endif %}clear_status"
-               class="text-white text-decoration-none">
-              クリア状況
-              {% if sort_field == 'clear_status' %}
-                <i class="fa-solid fa-sort-{{ sort_order }} ms-1"></i>
-              {% else %}
-                <i class="fa-solid fa-sort ms-1 opacity-25"></i>
-              {% endif %}
-            </a>
-          </th>
-          <th class="text-center">
-            <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'grade' and sort_order == 'asc' %}-{% endif %}grade"
-               class="text-white text-decoration-none">
-              評価
-              {% if sort_field == 'grade' %}
-                <i class="fa-solid fa-sort-{{ sort_order }} ms-1"></i>
-              {% else %}
-                <i class="fa-solid fa-sort ms-1 opacity-25"></i>
-              {% endif %}
-            </a>
-          </th>
-          <th class="text-center">
-            <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'is_package' and sort_order == 'asc' %}-{% endif %}is_package"
-               class="text-white text-decoration-none">
-              パッケージ所有
-              {% if sort_field == 'is_package' %}
-                <i class="fa-solid fa-sort-{{ sort_order }} ms-1"></i>
-              {% else %}
-                <i class="fa-solid fa-sort ms-1 opacity-25"></i>
-              {% endif %}
-            </a>
-          </th>
-          <th class="text-center">
-            <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'is_bishojo' and sort_order == 'asc' %}-{% endif %}is_bishojo"
-               class="text-white text-decoration-none">
-              美少女
-              {% if sort_field == 'is_bishojo' %}
-                <i class="fa-solid fa-sort-{{ sort_order }} ms-1"></i>
-              {% else %}
-                <i class="fa-solid fa-sort ms-1 opacity-25"></i>
-              {% endif %}
-            </a>
-          </th>
-          <th class="text-center">
-            <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'cleared_at' and sort_order == 'asc' %}-{% endif %}cleared_at"
-               class="text-white text-decoration-none">
-              クリア日
-              {% if sort_field == 'cleared_at' %}
-                <i class="fa-solid fa-sort-{{ sort_order }} ms-1"></i>
-              {% else %}
-                <i class="fa-solid fa-sort ms-1 opacity-25"></i>
-              {% endif %}
-            </a>
-          </th>
-          <th class="text-center">
-            <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'note' and sort_order == 'asc' %}-{% endif %}note"
-               class="text-white text-decoration-none">
-              備考
-              {% if sort_field == 'note' %}
-                <i class="fa-solid fa-sort-{{ sort_order }} ms-1"></i>
-              {% else %}
-                <i class="fa-solid fa-sort ms-1 opacity-25"></i>
-              {% endif %}
-            </a>
-          </th>
+          {% include "tsumigee_database/_sort_th.html" with field="furigana" label="タイトル" %}
+          {% include "tsumigee_database/_sort_th.html" with field="maker__furigana" label="メーカー" %}
+          {% include "tsumigee_database/_sort_th.html" with field="hard__name" label="ハード" th_class="text-center" tooltip="（）内はプレイ機種" %}
+          {% include "tsumigee_database/_sort_th.html" with field="clear_status" label="クリア状況" th_class="text-center" %}
+          {% include "tsumigee_database/_sort_th.html" with field="grade" label="評価" th_class="text-center" %}
+          {% include "tsumigee_database/_sort_th.html" with field="is_package" label="パッケージ所有" th_class="text-center" %}
+          {% include "tsumigee_database/_sort_th.html" with field="is_bishojo" label="美少女" th_class="text-center" %}
+          {% include "tsumigee_database/_sort_th.html" with field="cleared_at" label="クリア日" th_class="text-center" %}
+          {% include "tsumigee_database/_sort_th.html" with field="note" label="備考" th_class="text-center" %}
         </tr>
       {% endwith %}
     </thead>
@@ -332,37 +234,11 @@
             {% if game.play_hard %}（{{ game.play_hard }}）{% endif %}
           </td>
           <td class="text-center">
-            {% if game.clear_status == 'clear' %}
-              <span class="badge text-bg-success">{{ game.get_clear_status_display }}</span>
-            {% elif game.clear_status == 'tsumi' %}
-              <span class="badge text-bg-danger">{{ game.get_clear_status_display }}</span>
-            {% else %}
-              <span class="badge text-bg-secondary">{{ game.get_clear_status_display }}</span>
-            {% endif %}
+            {% include "tsumigee_database/_clear_status_badge.html" with cs=game.clear_status cs_label=game.get_clear_status_display %}
           </td>
-          <td class="text-center">
-            {% if game.grade == 'S+' %}
-              <span class="badge text-bg-warning">{{ game.grade }}</span>
-            {% elif game.grade != '-' %}
-              <span class="badge border border-secondary text-dark">{{ game.grade }}</span>
-            {% else %}
-              {{ game.grade }}
-            {% endif %}
-          </td>
-          <td class="text-center">
-            {% if game.is_package %}
-              <i class="fa-solid fa-check"></i>
-            {% else %}
-              -
-            {% endif %}
-          </td>
-          <td class="text-center">
-            {% if game.is_bishojo %}
-              <i class="fa-solid fa-check"></i>
-            {% else %}
-              -
-            {% endif %}
-          </td>
+          <td class="text-center">{% include "tsumigee_database/_grade_badge.html" with grade=game.grade %}</td>
+          <td class="text-center">{% include "tsumigee_database/_bool_icon.html" with value=game.is_package %}</td>
+          <td class="text-center">{% include "tsumigee_database/_bool_icon.html" with value=game.is_bishojo %}</td>
           <td class="text-center text-nowrap">{{ game.cleared_at|date:"Y/m/d"|default:"-" }}</td>
           <td class="text-center">{{ game.note }}</td>
         </tr>

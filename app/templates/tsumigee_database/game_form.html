@@ -1,26 +1,10 @@
 {% extends "base.html" %}
 {% block page_title %}ゲーム{{ action }} | {% endblock page_title %}
 {% block content %}
-  <div class="mb-3">
-    <h1 class="h3">ゲーム{{ action }}</h1>
-  </div>
+  <h1 class="h3 mb-3">ゲーム{{ action }}</h1>
   <form method="post" class="col-lg-6" novalidate>
     {% csrf_token %}
-    {% for field in form %}
-      <div class="mb-3">
-        <label for="{{ field.id_for_label }}" class="form-label fw-semibold">{{ field.label }}</label>
-        <div>
-          {% if field.field.widget.input_type == "checkbox" %}
-            <div class="form-check">{{ field }}</div>
-          {% else %}
-            {{ field }}
-          {% endif %}
-        </div>
-        {% if field.errors %}
-          <div class="text-danger small mt-1">{{ field.errors }}</div>
-        {% endif %}
-      </div>
-    {% endfor %}
+    {% include "tsumigee_database/_form_fields.html" %}
     <div class="d-flex gap-2 mt-4">
       <button type="submit" class="btn btn-primary">Save</button>
       <a href="{% if object %}{% url 'tsumigee_database:game_detail' object.pk %}{% else %}{% url 'tsumigee_database:game_list' %}{% endif %}"

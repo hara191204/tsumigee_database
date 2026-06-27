@@ -1,14 +1,5 @@
 {% extends "base.html" %}
 {% block page_title %}ハード一覧 | {% endblock page_title %}
-{% block extra_styles %}
-  <style>
-    thead th {
-      position: sticky;
-      top: 0;
-      z-index: 1;
-    }
-  </style>
-{% endblock extra_styles %}
 {% block navbar_actions %}
   <a href="{% url 'tsumigee_database:hard_create' %}"
      class="btn btn-outline-light btn-sm">Add</a>

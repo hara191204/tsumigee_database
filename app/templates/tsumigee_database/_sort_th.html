@@ -1,0 +1,16 @@
+<th {% if th_class %}class="{{ th_class }}"{% endif %}>
+  <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == field and sort_order == 'asc' %}-{% endif %}{{ field }}"
+     class="text-white text-decoration-none">
+    {{ label }}
+    {% if sort_field == field %}
+      <i class="fa-solid fa-sort-{{ sort_order }} ms-1"></i>
+    {% else %}
+      <i class="fa-solid fa-sort ms-1 opacity-25"></i>
+    {% endif %}
+  </a>
+  {% if tooltip %}
+    <i class="fa-solid fa-circle-info text-secondary small"
+       data-bs-toggle="tooltip"
+       data-bs-title="{{ tooltip }}"></i>
+  {% endif %}
+</th>

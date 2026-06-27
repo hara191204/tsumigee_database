@@ -1,14 +1,5 @@
 {% extends "base.html" %}
 {% block page_title %}メーカー一覧 | {% endblock page_title %}
-{% block extra_styles %}
-  <style>
-    thead th {
-      position: sticky;
-      top: 0;
-      z-index: 1;
-    }
-  </style>
-{% endblock extra_styles %}
 {% block navbar_actions %}
   <a href="{% url 'tsumigee_database:maker_create' %}"
      class="btn btn-outline-light btn-sm">Add</a>
@@ -29,13 +20,7 @@
         <tr>
           <td class="text-center text-muted">{{ forloop.counter }}</td>
           <td><a href="{% url 'tsumigee_database:maker_detail' maker.pk %}">{{ maker.name }}</a></td>
-          <td class="text-center">
-            {% if maker.is_bishojo_brand %}
-              <i class="fa-solid fa-check"></i>
-            {% else %}
-              -
-            {% endif %}
-          </td>
+          <td class="text-center">{% include "tsumigee_database/_bool_icon.html" with value=maker.is_bishojo_brand %}</td>
         </tr>
       {% empty %}
         <tr>
