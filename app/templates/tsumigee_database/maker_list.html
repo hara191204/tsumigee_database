@@ -24,7 +24,6 @@
           <th>名前</th>
           <th>フリガナ</th>
           <th class="text-center">美少女ブランド</th>
-          <th class="text-center">操作</th>
         </tr>
       </thead>
       <tbody>
@@ -40,16 +39,10 @@
                 -
               {% endif %}
             </td>
-            <td class="text-center">
-              <a href="{% url 'tsumigee_database:maker_update' maker.pk %}"
-                 class="text-secondary">
-                <i class="fa-solid fa-pen-to-square"></i>
-              </a>
-            </td>
           </tr>
         {% empty %}
           <tr>
-            <td colspan="5" class="text-center py-5 text-muted">
+            <td colspan="4" class="text-center py-5 text-muted">
               <i class="fa-solid fa-building fa-2x opacity-50 mb-2 d-block"></i>
               メーカーが登録されていません
             </td>
