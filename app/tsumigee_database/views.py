@@ -25,6 +25,13 @@ _VALID_SORT_FIELDS = {
 }
 
 
+class ActionMixin:
+    action = ""
+
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(**kwargs) | {"action": self.action}
+
+
 class GameListView(ListView):
     model = Game
     template_name = "tsumigee_database/game_list.html"
@@ -104,26 +111,18 @@ class GameDetailView(DetailView):
     template_name = "tsumigee_database/game_detail.html"
 
 
-class GameCreateView(CreateView):
+class GameCreateView(ActionMixin, CreateView):
     model = Game
     form_class = GameForm
     template_name = "tsumigee_database/game_form.html"
-
-    def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
-        ctx["action"] = "追加"
-        return ctx
+    action = "追加"
 
 
-class GameUpdateView(UpdateView):
+class GameUpdateView(ActionMixin, UpdateView):
     model = Game
     form_class = GameForm
     template_name = "tsumigee_database/game_form.html"
-
-    def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
-        ctx["action"] = "編集"
-        return ctx
+    action = "編集"
 
 
 class GameDeleteView(DeleteView):
@@ -145,28 +144,20 @@ class MakerListView(ListView):
     template_name = "tsumigee_database/maker_list.html"
 
 
-class MakerCreateView(CreateView):
+class MakerCreateView(ActionMixin, CreateView):
     model = Maker
     form_class = MakerForm
     template_name = "tsumigee_database/maker_form.html"
     success_url = reverse_lazy("tsumigee_database:maker_list")
-
-    def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
-        ctx["action"] = "追加"
-        return ctx
+    action = "追加"
 
 
-class MakerUpdateView(UpdateView):
+class MakerUpdateView(ActionMixin, UpdateView):
     model = Maker
     form_class = MakerForm
     template_name = "tsumigee_database/maker_form.html"
     success_url = reverse_lazy("tsumigee_database:maker_list")
-
-    def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
-        ctx["action"] = "編集"
-        return ctx
+    action = "編集"
 
 
 class MakerDeleteView(DeleteView):
@@ -188,28 +179,20 @@ class HardListView(ListView):
     template_name = "tsumigee_database/hard_list.html"
 
 
-class HardCreateView(CreateView):
+class HardCreateView(ActionMixin, CreateView):
     model = Hard
     form_class = HardForm
     template_name = "tsumigee_database/hard_form.html"
     success_url = reverse_lazy("tsumigee_database:hard_list")
-
-    def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
-        ctx["action"] = "追加"
-        return ctx
+    action = "追加"
 
 
-class HardUpdateView(UpdateView):
+class HardUpdateView(ActionMixin, UpdateView):
     model = Hard
     form_class = HardForm
     template_name = "tsumigee_database/hard_form.html"
     success_url = reverse_lazy("tsumigee_database:hard_list")
-
-    def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
-        ctx["action"] = "編集"
-        return ctx
+    action = "編集"
 
 
 class HardDeleteView(DeleteView):
