@@ -1,5 +1,20 @@
 {% extends "base.html" %}
 {% block page_title %}ゲーム一覧 | {% endblock page_title %}
+{% block extra_styles %}
+  <style>
+    #filterAccordion .accordion-button:not(.collapsed) {
+      background-color: #212529;
+      color: #fff;
+      box-shadow: none;
+    }
+    #filterAccordion .accordion-button:not(.collapsed)::after {
+      filter: invert(1);
+    }
+    #filterAccordion .accordion-button:focus {
+      box-shadow: none;
+    }
+  </style>
+{% endblock extra_styles %}
 {% block navbar_actions %}
   <a href="{% url 'tsumigee_database:game_create' %}"
      class="btn btn-outline-light btn-sm">Add</a>
@@ -14,8 +29,7 @@
                   width="160"
                   height="120"
                   data-clear="{{ stats.clear }}"
-                  data-tsumi="{{ stats.tsumi }}"
-                  data-collection-only="{{ stats.collection_only }}"></canvas>
+                  data-tsumi="{{ stats.tsumi }}"></canvas>
         </div>
         <div class="col">
           <div class="fs-4 fw-bold mb-1">積み率：{{ stats.tsumi_ratio }}%</div>
@@ -38,15 +52,20 @@
                   data-bs-toggle="collapse"
                   data-bs-target="#filterCollapse"
                   aria-expanded="{% if is_filtered %}true{% else %}false{% endif %}"
-                  aria-controls="filterCollapse">Filter</button>
+                  aria-controls="filterCollapse">
+            Filter
+            {% if filter_count %}
+              <span class="badge text-bg-primary rounded-pill ms-2">{{ filter_count }}</span>
+            {% endif %}
+          </button>
         </h2>
         <div id="filterCollapse"
              class="accordion-collapse collapse {% if is_filtered %}show{% endif %}"
              data-bs-parent="#filterAccordion">
           <div class="accordion-body">
             <form method="get">
-              <div class="row g-2 align-items-end">
-                <div class="col-auto">
+              <div class="d-flex flex-column gap-3">
+                <div>
                   <label class="form-label small fw-semibold mb-1">メーカー</label>
                   <select name="maker" class="form-select form-select-sm">
                     <option value="">すべて</option>
@@ -56,7 +75,7 @@
                     {% endfor %}
                   </select>
                 </div>
-                <div class="col-auto">
+                <div>
                   <label class="form-label small fw-semibold mb-1">ハード</label>
                   <select name="hard" class="form-select form-select-sm">
                     <option value="">すべて</option>
@@ -66,7 +85,7 @@
                     {% endfor %}
                   </select>
                 </div>
-                <div class="col-auto">
+                <div>
                   <label class="form-label small fw-semibold mb-1">クリア状況</label>
                   <div class="d-flex gap-3">
                     {% for value, label in clear_status_choices %}
@@ -82,7 +101,7 @@
                     {% endfor %}
                   </div>
                 </div>
-                <div class="col-auto">
+                <div>
                   <label class="form-label small fw-semibold mb-1">評価</label>
                   <div class="d-flex gap-3">
                     {% for value, label in grade_choices %}
@@ -98,27 +117,75 @@
                     {% endfor %}
                   </div>
                 </div>
-                <div class="col-auto">
+                <div>
                   <label class="form-label small fw-semibold mb-1">パッケージ所有</label>
-                  <select name="is_package" class="form-select form-select-sm">
-                    <option value="" {% if selected_is_package == "" %}selected{% endif %}>すべて</option>
-                    <option value="true"
-                            {% if selected_is_package == "true" %}selected{% endif %}>✓ あり</option>
-                    <option value="false"
-                            {% if selected_is_package == "false" %}selected{% endif %}>- なし</option>
-                  </select>
+                  <div class="d-flex gap-3">
+                    <div class="form-check">
+                      <input class="form-check-input"
+                             type="radio"
+                             name="is_package"
+                             id="pkg_all"
+                             value=""
+                             {% if selected_is_package == "" %}checked{% endif %} />
+                      <label class="form-check-label small" for="pkg_all">すべて</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input"
+                             type="radio"
+                             name="is_package"
+                             id="pkg_true"
+                             value="true"
+                             {% if selected_is_package == "true" %}checked{% endif %} />
+                      <label class="form-check-label small" for="pkg_true">
+                        <i class="fa-solid fa-check"></i>
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input"
+                             type="radio"
+                             name="is_package"
+                             id="pkg_false"
+                             value="false"
+                             {% if selected_is_package == "false" %}checked{% endif %} />
+                      <label class="form-check-label small" for="pkg_false">-</label>
+                    </div>
+                  </div>
                 </div>
-                <div class="col-auto">
+                <div>
                   <label class="form-label small fw-semibold mb-1">美少女ゲーム</label>
-                  <select name="is_bishojo" class="form-select form-select-sm">
-                    <option value="" {% if selected_is_bishojo == "" %}selected{% endif %}>すべて</option>
-                    <option value="true"
-                            {% if selected_is_bishojo == "true" %}selected{% endif %}>✓ あり</option>
-                    <option value="false"
-                            {% if selected_is_bishojo == "false" %}selected{% endif %}>- なし</option>
-                  </select>
+                  <div class="d-flex gap-3">
+                    <div class="form-check">
+                      <input class="form-check-input"
+                             type="radio"
+                             name="is_bishojo"
+                             id="bsj_all"
+                             value=""
+                             {% if selected_is_bishojo == "" %}checked{% endif %} />
+                      <label class="form-check-label small" for="bsj_all">すべて</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input"
+                             type="radio"
+                             name="is_bishojo"
+                             id="bsj_true"
+                             value="true"
+                             {% if selected_is_bishojo == "true" %}checked{% endif %} />
+                      <label class="form-check-label small" for="bsj_true">
+                        <i class="fa-solid fa-check"></i>
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input"
+                             type="radio"
+                             name="is_bishojo"
+                             id="bsj_false"
+                             value="false"
+                             {% if selected_is_bishojo == "false" %}checked{% endif %} />
+                      <label class="form-check-label small" for="bsj_false">-</label>
+                    </div>
+                  </div>
                 </div>
-                <div class="col-auto d-flex gap-1">
+                <div class="d-flex gap-1">
                   <button type="submit" class="btn btn-outline-primary btn-sm">Filter</button>
                   <a href="{% url 'tsumigee_database:game_list' %}"
                      class="btn btn-outline-secondary btn-sm">Clear</a>
@@ -130,124 +197,27 @@
       </div>
     </div>
   {% endwith %}
+  <p class="text-muted small mb-2">
+    {% if is_paginated %}
+      全 {{ paginator.count }} 件中 {{ page_obj.start_index }}〜{{ page_obj.end_index }} 件を表示
+    {% else %}
+      全 {{ paginator.count }} 件
+    {% endif %}
+  </p>
   <table class="table table-hover">
     <thead class="table-dark">
       {% with bp=base_params %}
         <tr>
           <th class="text-center" style="width: 4rem">No.</th>
-          <th>
-            <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'furigana' and sort_order == 'asc' %}-{% endif %}furigana"
-               class="text-white text-decoration-none">
-              タイトル
-              {% if sort_field == 'furigana' %}
-                <i class="fa-solid fa-sort-{{ sort_order }} ms-1"></i>
-              {% else %}
-                <i class="fa-solid fa-sort ms-1 opacity-25"></i>
-              {% endif %}
-            </a>
-          </th>
-          <th>
-            <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'maker__furigana' and sort_order == 'asc' %}-{% endif %}maker__furigana"
-               class="text-white text-decoration-none">
-              メーカー
-              {% if sort_field == 'maker__furigana' %}
-                <i class="fa-solid fa-sort-{{ sort_order }} ms-1"></i>
-              {% else %}
-                <i class="fa-solid fa-sort ms-1 opacity-25"></i>
-              {% endif %}
-            </a>
-          </th>
-          <th class="text-center">
-            <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'hard__name' and sort_order == 'asc' %}-{% endif %}hard__name"
-               class="text-white text-decoration-none">
-              ハード
-              {% if sort_field == 'hard__name' %}
-                <i class="fa-solid fa-sort-{{ sort_order }} ms-1"></i>
-              {% else %}
-                <i class="fa-solid fa-sort ms-1 opacity-25"></i>
-              {% endif %}
-            </a>
-            <i class="fa-solid fa-circle-info text-secondary small"
-               data-bs-toggle="tooltip"
-               data-bs-title="（）内はプレイ機種"></i>
-          </th>
-          <th class="text-center">
-            <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'clear_status' and sort_order == 'asc' %}-{% endif %}clear_status"
-               class="text-white text-decoration-none">
-              クリア状況
-              {% if sort_field == 'clear_status' %}
-                <i class="fa-solid fa-sort-{{ sort_order }} ms-1"></i>
-              {% else %}
-                <i class="fa-solid fa-sort ms-1 opacity-25"></i>
-              {% endif %}
-            </a>
-          </th>
-          <th class="text-center">
-            <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'grade' and sort_order == 'asc' %}-{% endif %}grade"
-               class="text-white text-decoration-none">
-              評価
-              {% if sort_field == 'grade' %}
-                <i class="fa-solid fa-sort-{{ sort_order }} ms-1"></i>
-              {% else %}
-                <i class="fa-solid fa-sort ms-1 opacity-25"></i>
-              {% endif %}
-            </a>
-          </th>
-          <th class="text-center">
-            <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'is_package' and sort_order == 'asc' %}-{% endif %}is_package"
-               class="text-white text-decoration-none">
-              パッケージ所有
-              {% if sort_field == 'is_package' %}
-                <i class="fa-solid fa-sort-{{ sort_order }} ms-1"></i>
-              {% else %}
-                <i class="fa-solid fa-sort ms-1 opacity-25"></i>
-              {% endif %}
-            </a>
-          </th>
-          <th class="text-center">
-            <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'is_bishojo' and sort_order == 'asc' %}-{% endif %}is_bishojo"
-               class="text-white text-decoration-none">
-              美少女
-              {% if sort_field == 'is_bishojo' %}
-                <i class="fa-solid fa-sort-{{ sort_order }} ms-1"></i>
-              {% else %}
-                <i class="fa-solid fa-sort ms-1 opacity-25"></i>
-              {% endif %}
-            </a>
-          </th>
-          <th class="text-center">
-            <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'created_at' and sort_order == 'asc' %}-{% endif %}created_at"
-               class="text-white text-decoration-none">
-              作成日
-              {% if sort_field == 'created_at' %}
-                <i class="fa-solid fa-sort-{{ sort_order }} ms-1"></i>
-              {% else %}
-                <i class="fa-solid fa-sort ms-1 opacity-25"></i>
-              {% endif %}
-            </a>
-          </th>
-          <th class="text-center">
-            <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'cleared_at' and sort_order == 'asc' %}-{% endif %}cleared_at"
-               class="text-white text-decoration-none">
-              クリア日
-              {% if sort_field == 'cleared_at' %}
-                <i class="fa-solid fa-sort-{{ sort_order }} ms-1"></i>
-              {% else %}
-                <i class="fa-solid fa-sort ms-1 opacity-25"></i>
-              {% endif %}
-            </a>
-          </th>
-          <th class="text-center">
-            <a href="?{% if bp %}{{ bp }}&{% endif %}sort={% if sort_field == 'note' and sort_order == 'asc' %}-{% endif %}note"
-               class="text-white text-decoration-none">
-              備考
-              {% if sort_field == 'note' %}
-                <i class="fa-solid fa-sort-{{ sort_order }} ms-1"></i>
-              {% else %}
-                <i class="fa-solid fa-sort ms-1 opacity-25"></i>
-              {% endif %}
-            </a>
-          </th>
+          {% include "tsumigee_database/_sort_th.html" with field="furigana" label="タイトル" %}
+          {% include "tsumigee_database/_sort_th.html" with field="maker__furigana" label="メーカー" %}
+          {% include "tsumigee_database/_sort_th.html" with field="hard__name" label="ハード" th_class="text-center" tooltip="（）内はプレイ機種" %}
+          {% include "tsumigee_database/_sort_th.html" with field="clear_status" label="クリア状況" th_class="text-center" %}
+          {% include "tsumigee_database/_sort_th.html" with field="grade" label="評価" th_class="text-center" %}
+          {% include "tsumigee_database/_sort_th.html" with field="is_package" label="パッケージ所有" th_class="text-center" %}
+          {% include "tsumigee_database/_sort_th.html" with field="is_bishojo" label="美少女" th_class="text-center" %}
+          {% include "tsumigee_database/_sort_th.html" with field="cleared_at" label="クリア日" th_class="text-center" %}
+          {% include "tsumigee_database/_sort_th.html" with field="note" label="備考" th_class="text-center" %}
         </tr>
       {% endwith %}
     </thead>
@@ -263,29 +233,30 @@
             {{ game.hard }}
             {% if game.play_hard %}（{{ game.play_hard }}）{% endif %}
           </td>
-          <td class="text-center">{{ game.get_clear_status_display }}</td>
-          <td class="text-center">{{ game.grade }}</td>
           <td class="text-center">
-            {% if game.is_package %}
-              <i class="fa-solid fa-check"></i>
-            {% else %}
-              -
-            {% endif %}
+            {% include "tsumigee_database/_clear_status_badge.html" with cs=game.clear_status cs_label=game.get_clear_status_display %}
           </td>
-          <td class="text-center">
-            {% if game.is_bishojo %}
-              <i class="fa-solid fa-check"></i>
-            {% else %}
-              -
-            {% endif %}
-          </td>
-          <td class="text-center text-nowrap">{{ game.created_at|date:"Y/m/d" }}</td>
+          <td class="text-center">{% include "tsumigee_database/_grade_badge.html" with grade=game.grade %}</td>
+          <td class="text-center">{% include "tsumigee_database/_bool_icon.html" with value=game.is_package %}</td>
+          <td class="text-center">{% include "tsumigee_database/_bool_icon.html" with value=game.is_bishojo %}</td>
           <td class="text-center text-nowrap">{{ game.cleared_at|date:"Y/m/d"|default:"-" }}</td>
           <td class="text-center">{{ game.note }}</td>
         </tr>
       {% empty %}
         <tr>
-          <td colspan="11" class="text-center text-muted">ゲームが登録されていません</td>
+          <td colspan="10" class="text-center py-5 text-muted">
+            {% if filter_count %}
+              <i class="fa-solid fa-magnifying-glass fa-2x opacity-50 mb-2 d-block"></i>
+              条件に一致するゲームがありません
+              <div class="mt-2">
+                <a href="{% url 'tsumigee_database:game_list' %}"
+                   class="btn btn-outline-secondary btn-sm">フィルターをクリア</a>
+              </div>
+            {% else %}
+              <i class="fa-solid fa-gamepad fa-2x opacity-50 mb-2 d-block"></i>
+              ゲームが登録されていません
+            {% endif %}
+          </td>
         </tr>
       {% endfor %}
     </tbody>
@@ -296,27 +267,47 @@
         {% if page_obj.has_previous %}
           <li class="page-item">
             <a class="page-link"
+               href="?{% if filter_params %}{{ filter_params }}&{% endif %}page=1">«</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link"
                href="?{% if filter_params %}{{ filter_params }}&{% endif %}page={{ page_obj.previous_page_number }}">Prev</a>
           </li>
         {% else %}
           <li class="page-item disabled">
+            <span class="page-link">«</span>
+          </li>
+          <li class="page-item disabled">
             <span class="page-link">Prev</span>
           </li>
         {% endif %}
-        {% for num in page_obj.paginator.page_range %}
-          <li class="page-item {% if page_obj.number == num %}active{% endif %}">
-            <a class="page-link"
-               href="?{% if filter_params %}{{ filter_params }}&{% endif %}page={{ num }}">{{ num }}</a>
-          </li>
+        {% for num in page_range %}
+          {% if not num %}
+            <li class="page-item disabled">
+              <span class="page-link">…</span>
+            </li>
+          {% else %}
+            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+              <a class="page-link"
+                 href="?{% if filter_params %}{{ filter_params }}&{% endif %}page={{ num }}">{{ num }}</a>
+            </li>
+          {% endif %}
         {% endfor %}
         {% if page_obj.has_next %}
           <li class="page-item">
             <a class="page-link"
                href="?{% if filter_params %}{{ filter_params }}&{% endif %}page={{ page_obj.next_page_number }}">Next</a>
           </li>
+          <li class="page-item">
+            <a class="page-link"
+               href="?{% if filter_params %}{{ filter_params }}&{% endif %}page={{ paginator.num_pages }}">»</a>
+          </li>
         {% else %}
           <li class="page-item disabled">
             <span class="page-link">Next</span>
+          </li>
+          <li class="page-item disabled">
+            <span class="page-link">»</span>
           </li>
         {% endif %}
       </ul>
@@ -330,21 +321,21 @@
     new Chart(canvas, {
       type: 'doughnut',
       data: {
-        labels: ['クリア', '積み', '収集のみ'],
+        labels: ['クリア', '積み'],
         datasets: [{
           data: [
             parseInt(canvas.dataset.clear),
             parseInt(canvas.dataset.tsumi),
-            parseInt(canvas.dataset.collectionOnly),
           ],
-          backgroundColor: ['#198754', '#dc3545', '#6c757d'],
+          backgroundColor: ['#198754', '#dc3545'],
           borderWidth: 0,
         }]
       },
       options: {
         maintainAspectRatio: false,
         plugins: {
-          legend: { position: 'right', labels: { boxWidth: 12 } }
+          legend: { position: 'right', labels: { boxWidth: 12 }, onClick: () => {} },
+          tooltip: { enabled: false }
         }
       }
     })

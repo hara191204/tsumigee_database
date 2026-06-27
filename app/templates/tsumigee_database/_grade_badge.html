@@ -1,0 +1,7 @@
+{% if grade == 'S+' %}
+  <span class="badge text-bg-warning">{{ grade }}</span>
+{% elif grade != '-' %}
+  <span class="badge border border-secondary text-dark">{{ grade }}</span>
+{% else %}
+  {{ grade }}
+{% endif %}

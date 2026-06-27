@@ -1,5 +1,5 @@
 from django.db.models import Count, Q
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.views.generic import (
     CreateView,
     DeleteView,
@@ -35,7 +35,11 @@ class ActionMixin:
 class GameListView(ListView):
     model = Game
     template_name = "tsumigee_database/game_list.html"
-    paginate_by = 20
+    paginate_by = 500
+
+    def get(self, request, *args, **kwargs):
+        request.session["game_list_params"] = request.GET.urlencode()
+        return super().get(request, *args, **kwargs)
 
     def _get_sort(self):
         sort = self.request.GET.get("sort", "furigana")
@@ -65,8 +69,28 @@ class GameListView(ListView):
             qs = qs.filter(is_bishojo=is_bishojo == "true")
         return qs
 
+    def _get_page_range(self, page_obj):
+        current = page_obj.number
+        total = page_obj.paginator.num_pages
+        delta = 2
+        edges = {1, 2, total - 1, total}
+        window = set(range(max(1, current - delta), min(total, current + delta) + 1))
+        pages = sorted(p for p in (edges | window) if 1 <= p <= total)
+        result = []
+        prev = None
+        for p in pages:
+            if prev is not None and p - prev > 1:
+                result.append(None)
+            result.append(p)
+            prev = p
+        return result
+
     def get_queryset(self):
-        return self._get_filtered_qs().order_by(self._get_sort())
+        sort = self._get_sort()
+        order = [sort]
+        if sort.lstrip("-") != "furigana":
+            order.append("furigana")
+        return self._get_filtered_qs().order_by(*order)
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
@@ -90,6 +114,18 @@ class GameListView(ListView):
         base_params.pop("page", None)
         base_params.pop("sort", None)
         ctx["base_params"] = base_params.urlencode()
+        ctx["filter_count"] = sum(
+            [
+                1 if self.request.GET.get("maker") else 0,
+                1 if self.request.GET.get("hard") else 0,
+                len(self.request.GET.getlist("clear_status")),
+                len(self.request.GET.getlist("grade")),
+                1 if self.request.GET.get("is_package") else 0,
+                1 if self.request.GET.get("is_bishojo") else 0,
+            ]
+        )
+        if ctx.get("is_paginated"):
+            ctx["page_range"] = self._get_page_range(ctx["page_obj"])
         agg = self._get_filtered_qs().aggregate(
             total=Count("id"),
             clear=Count("id", filter=Q(clear_status=Game.ClearStatusChoices.CLEAR)),
@@ -98,10 +134,10 @@ class GameListView(ListView):
                 "id", filter=Q(clear_status=Game.ClearStatusChoices.COLLECTION_ONLY)
             ),
         )
-        total = agg["total"]
+        playable = agg["clear"] + agg["tsumi"]
         ctx["stats"] = {
             **agg,
-            "tsumi_ratio": round(agg["tsumi"] / total * 100, 1) if total else 0,
+            "tsumi_ratio": round(agg["tsumi"] / playable * 100, 1) if playable else 0,
         }
         return ctx
 
@@ -124,11 +160,19 @@ class GameUpdateView(ActionMixin, UpdateView):
     template_name = "tsumigee_database/game_form.html"
     action = "編集"
 
+    def get_success_url(self):
+        params = self.request.session.get("game_list_params", "")
+        url = reverse("tsumigee_database:game_list")
+        return f"{url}?{params}" if params else url
+
 
 class GameDeleteView(DeleteView):
     model = Game
-    template_name = "tsumigee_database/game_confirm_delete.html"
-    success_url = reverse_lazy("tsumigee_database:game_list")
+
+    def get_success_url(self):
+        params = self.request.session.get("game_list_params", "")
+        url = reverse("tsumigee_database:game_list")
+        return f"{url}?{params}" if params else url
 
 
 # --- Maker ---
@@ -162,7 +206,6 @@ class MakerUpdateView(ActionMixin, UpdateView):
 
 class MakerDeleteView(DeleteView):
     model = Maker
-    template_name = "tsumigee_database/maker_confirm_delete.html"
     success_url = reverse_lazy("tsumigee_database:maker_list")
 
 
@@ -197,5 +240,4 @@ class HardUpdateView(ActionMixin, UpdateView):
 
 class HardDeleteView(DeleteView):
     model = Hard
-    template_name = "tsumigee_database/hard_confirm_delete.html"
     success_url = reverse_lazy("tsumigee_database:hard_list")

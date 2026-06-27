@@ -1,15 +1,7 @@
 {% extends "base.html" %}
 {% block page_title %}{{ game.title }} | {% endblock page_title %}
 {% block content %}
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h1 class="h3">{{ game.title }}</h1>
-    <div>
-      <a href="{% url 'tsumigee_database:game_update' game.pk %}"
-         class="btn btn-outline-secondary btn-sm">Edit</a>
-      <a href="{% url 'tsumigee_database:game_delete' game.pk %}"
-         class="btn btn-outline-danger btn-sm">Delete</a>
-    </div>
-  </div>
+  <h1 class="h3 mb-3">{{ game.title }}</h1>
   <table class="table table-bordered w-auto">
     <tbody>
       <tr>
@@ -30,19 +22,21 @@
       </tr>
       <tr>
         <th class="table-secondary">クリア状況</th>
-        <td>{{ game.get_clear_status_display }}</td>
+        <td>
+          {% include "tsumigee_database/_clear_status_badge.html" with cs=game.clear_status cs_label=game.get_clear_status_display %}
+        </td>
       </tr>
       <tr>
         <th class="table-secondary">評価</th>
-        <td>{{ game.grade }}</td>
+        <td>{% include "tsumigee_database/_grade_badge.html" with grade=game.grade %}</td>
       </tr>
       <tr>
         <th class="table-secondary">パッケージ所有</th>
-        <td>{{ game.is_package|yesno:"あり,なし" }}</td>
+        <td>{% include "tsumigee_database/_bool_icon.html" with value=game.is_package %}</td>
       </tr>
       <tr>
         <th class="table-secondary">美少女ゲーム</th>
-        <td>{{ game.is_bishojo|yesno:"あり,なし" }}</td>
+        <td>{% include "tsumigee_database/_bool_icon.html" with value=game.is_bishojo %}</td>
       </tr>
       <tr>
         <th class="table-secondary">クリア日</th>
@@ -54,14 +48,23 @@
       </tr>
       <tr>
         <th class="table-secondary">登録日時</th>
-        <td>{{ game.created_at }}</td>
+        <td>{{ game.created_at|date:"Y/m/d H:i" }}</td>
       </tr>
       <tr>
         <th class="table-secondary">更新日時</th>
-        <td>{{ game.updated_at }}</td>
+        <td>{{ game.updated_at|date:"Y/m/d H:i" }}</td>
       </tr>
     </tbody>
   </table>
-  <a href="{% url 'tsumigee_database:game_list' %}"
-     class="btn btn-secondary mt-2">Back</a>
+  <div class="d-flex gap-2 mt-2">
+    <a href="{% url 'tsumigee_database:game_update' game.pk %}"
+       class="btn btn-secondary btn-sm">Edit</a>
+    <form method="post"
+          action="{% url 'tsumigee_database:game_delete' game.pk %}"
+          class="d-inline"
+          onsubmit="return confirm('「{{ game.title }}」を削除しますか？この操作は取り消せません。')">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+    </form>
+  </div>
 {% endblock content %}
