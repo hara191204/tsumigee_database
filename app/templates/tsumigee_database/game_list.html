@@ -384,9 +384,16 @@
         {% if page_obj.has_previous %}
           <li class="page-item">
             <a class="page-link"
+               href="?{% if filter_params %}{{ filter_params }}&{% endif %}page=1">«</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link"
                href="?{% if filter_params %}{{ filter_params }}&{% endif %}page={{ page_obj.previous_page_number }}">Prev</a>
           </li>
         {% else %}
+          <li class="page-item disabled">
+            <span class="page-link">«</span>
+          </li>
           <li class="page-item disabled">
             <span class="page-link">Prev</span>
           </li>
@@ -408,9 +415,16 @@
             <a class="page-link"
                href="?{% if filter_params %}{{ filter_params }}&{% endif %}page={{ page_obj.next_page_number }}">Next</a>
           </li>
+          <li class="page-item">
+            <a class="page-link"
+               href="?{% if filter_params %}{{ filter_params }}&{% endif %}page={{ paginator.num_pages }}">»</a>
+          </li>
         {% else %}
           <li class="page-item disabled">
             <span class="page-link">Next</span>
+          </li>
+          <li class="page-item disabled">
+            <span class="page-link">»</span>
           </li>
         {% endif %}
       </ul>

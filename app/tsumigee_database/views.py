@@ -35,7 +35,7 @@ class ActionMixin:
 class GameListView(ListView):
     model = Game
     template_name = "tsumigee_database/game_list.html"
-    paginate_by = 100
+    paginate_by = 500
 
     def _get_sort(self):
         sort = self.request.GET.get("sort", "furigana")
