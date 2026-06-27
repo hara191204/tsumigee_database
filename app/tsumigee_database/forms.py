@@ -1,3 +1,5 @@
+import datetime
+
 from django import forms
 
 from .models import Game, Hard, Maker
@@ -43,9 +45,12 @@ class GameForm(BootstrapFormMixin, forms.ModelForm):
         if clear_status == Game.ClearStatusChoices.CLEAR:
             if grade == Game.GradeChoices.NA:
                 self.add_error("grade", "クリア時は評価を設定してください。")
+            if not cleaned_data.get("cleared_at"):
+                cleaned_data["cleared_at"] = datetime.date.today()
         else:
             if grade != Game.GradeChoices.NA:
                 self.add_error("grade", "未クリア時は評価を「-」にしてください。")
+            cleaned_data["cleared_at"] = None
         return cleaned_data
 
 
