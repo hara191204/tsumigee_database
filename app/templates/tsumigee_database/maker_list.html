@@ -16,39 +16,37 @@
 {% block content %}
   <h1 class="h3 mb-3">メーカー一覧</h1>
   <p class="text-muted small mb-2">全 {{ object_list|length }} 件</p>
-  <div class="table-responsive">
-    <table class="table table-hover">
-      <thead class="table-dark">
+  <table class="table table-hover">
+    <thead class="table-dark">
+      <tr>
+        <th class="text-center" style="width: 4rem">No.</th>
+        <th>名前</th>
+        <th>フリガナ</th>
+        <th class="text-center">美少女ブランド</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for maker in object_list %}
         <tr>
-          <th class="text-center" style="width: 4rem">No.</th>
-          <th>名前</th>
-          <th>フリガナ</th>
-          <th class="text-center">美少女ブランド</th>
+          <td class="text-center text-muted">{{ forloop.counter }}</td>
+          <td><a href="{% url 'tsumigee_database:maker_detail' maker.pk %}">{{ maker.name }}</a></td>
+          <td>{{ maker.furigana }}</td>
+          <td class="text-center">
+            {% if maker.is_bishojo_brand %}
+              <i class="fa-solid fa-check"></i>
+            {% else %}
+              -
+            {% endif %}
+          </td>
         </tr>
-      </thead>
-      <tbody>
-        {% for maker in object_list %}
-          <tr>
-            <td class="text-center text-muted">{{ forloop.counter }}</td>
-            <td><a href="{% url 'tsumigee_database:maker_detail' maker.pk %}">{{ maker.name }}</a></td>
-            <td>{{ maker.furigana }}</td>
-            <td class="text-center">
-              {% if maker.is_bishojo_brand %}
-                <i class="fa-solid fa-check"></i>
-              {% else %}
-                -
-              {% endif %}
-            </td>
-          </tr>
-        {% empty %}
-          <tr>
-            <td colspan="4" class="text-center py-5 text-muted">
-              <i class="fa-solid fa-building fa-2x opacity-50 mb-2 d-block"></i>
-              メーカーが登録されていません
-            </td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+      {% empty %}
+        <tr>
+          <td colspan="4" class="text-center py-5 text-muted">
+            <i class="fa-solid fa-building fa-2x opacity-50 mb-2 d-block"></i>
+            メーカーが登録されていません
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 {% endblock content %}
