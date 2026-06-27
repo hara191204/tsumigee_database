@@ -37,6 +37,9 @@ class GameForm(BootstrapFormMixin, forms.ModelForm):
             "cleared_at": forms.DateInput(attrs={"type": "date"}),
             "note": forms.Textarea(attrs={"rows": 4}),
         }
+        help_texts = {
+            "play_hard": "例：マリオブラザーズをWiiのVCで所持している場合、「ハード=FC、プレイ可能ハード= Wii」",
+        }
 
     def clean(self):
         cleaned_data = super().clean()
