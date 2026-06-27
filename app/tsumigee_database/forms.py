@@ -18,6 +18,11 @@ class BootstrapFormMixin:
 
 
 class GameForm(BootstrapFormMixin, forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.instance.pk:
+            self.initial.setdefault("is_package", True)
+
     class Meta:
         model = Game
         fields = [
