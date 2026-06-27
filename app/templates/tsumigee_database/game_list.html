@@ -118,7 +118,7 @@
                   </div>
                 </div>
                 <div>
-                  <label class="form-label small fw-semibold mb-1">パッケージ所有</label>
+                  <label class="form-label small fw-semibold mb-1">pkg所有</label>
                   <div class="d-flex gap-3">
                     <div class="form-check">
                       <input class="form-check-input"
@@ -214,8 +214,9 @@
           {% include "tsumigee_database/_sort_th.html" with field="hard__name" label="ハード" th_class="text-center" tooltip="（）内はプレイ機種" %}
           {% include "tsumigee_database/_sort_th.html" with field="clear_status" label="クリア状況" th_class="text-center" %}
           {% include "tsumigee_database/_sort_th.html" with field="grade" label="評価" th_class="text-center" %}
-          {% include "tsumigee_database/_sort_th.html" with field="is_package" label="パッケージ所有" th_class="text-center" %}
+          {% include "tsumigee_database/_sort_th.html" with field="is_package" label="pkg所有" th_class="text-center" %}
           {% include "tsumigee_database/_sort_th.html" with field="is_bishojo" label="美少女" th_class="text-center" %}
+          {% include "tsumigee_database/_sort_th.html" with field="created_at" label="追加日" th_class="text-center" %}
           {% include "tsumigee_database/_sort_th.html" with field="cleared_at" label="クリア日" th_class="text-center" %}
           {% include "tsumigee_database/_sort_th.html" with field="note" label="備考" th_class="text-center" %}
         </tr>
@@ -239,12 +240,13 @@
           <td class="text-center">{% include "tsumigee_database/_grade_badge.html" with grade=game.grade %}</td>
           <td class="text-center">{% include "tsumigee_database/_bool_icon.html" with value=game.is_package %}</td>
           <td class="text-center">{% include "tsumigee_database/_bool_icon.html" with value=game.is_bishojo %}</td>
+          <td class="text-center text-nowrap">{{ game.created_at|date:"Y/m/d" }}</td>
           <td class="text-center text-nowrap">{{ game.cleared_at|date:"Y/m/d"|default:"-" }}</td>
           <td class="text-center">{{ game.note }}</td>
         </tr>
       {% empty %}
         <tr>
-          <td colspan="10" class="text-center py-5 text-muted">
+          <td colspan="11" class="text-center py-5 text-muted">
             {% if filter_count %}
               <i class="fa-solid fa-magnifying-glass fa-2x opacity-50 mb-2 d-block"></i>
               条件に一致するゲームがありません

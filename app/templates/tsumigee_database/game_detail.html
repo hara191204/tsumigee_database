@@ -17,7 +17,12 @@
         <td>{{ game.hard }}</td>
       </tr>
       <tr>
-        <th class="table-secondary">プレイ機種</th>
+        <th class="table-secondary">
+          プレイ機種
+          <i class="fa-solid fa-circle-info text-secondary small ms-1"
+             data-bs-toggle="tooltip"
+             data-bs-title="例：マリオブラザーズをWiiのVCで所持している場合、「ハード=FC、プレイ可能ハード= Wii」"></i>
+        </th>
         <td>{{ game.play_hard|default:"-" }}</td>
       </tr>
       <tr>
@@ -31,7 +36,7 @@
         <td>{% include "tsumigee_database/_grade_badge.html" with grade=game.grade %}</td>
       </tr>
       <tr>
-        <th class="table-secondary">パッケージ所有</th>
+        <th class="table-secondary">pkg所有</th>
         <td>{% include "tsumigee_database/_bool_icon.html" with value=game.is_package %}</td>
       </tr>
       <tr>
