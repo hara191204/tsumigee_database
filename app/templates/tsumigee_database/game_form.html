@@ -18,7 +18,11 @@
     const clearedAt = document.getElementById('id_cleared_at')
     clearStatus.addEventListener('change', () => {
       if (clearStatus.value === 'clear') {
-        if (!clearedAt.value) clearedAt.value = new Date().toISOString().slice(0, 10)
+        if (!clearedAt.value) {
+          const d = new Date()
+          d.setMinutes(d.getMinutes() - d.getTimezoneOffset())
+          clearedAt.value = d.toISOString().slice(0, 10)
+        }
       } else {
         clearedAt.value = ''
       }
